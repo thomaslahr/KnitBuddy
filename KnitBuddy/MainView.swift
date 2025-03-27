@@ -13,7 +13,7 @@ struct MainView: View {
 	@Query var yarnDetails: [YarnNotes]
 	
 	@StateObject private var mainViewModel = MainViewModel()
-
+	
 	var body: some View {
 		ScrollView {
 			VStack(spacing: 5) {
@@ -40,21 +40,18 @@ struct MainView: View {
 				VStack {
 					ToggleView(incomingBool: $mainViewModel.useAutomaticCounter, trueString: "Switch to Manual Counter", falseString: "Switch to Automatic Counter")
 					
-							
+					
 					if !mainViewModel.useAutomaticCounter {
 						ManualRowCounter(rowsOfRowsManual: $mainViewModel.rowsOfRowsManual, numberOfRows: $mainViewModel.numberOfRowsManual)
-										.frame(maxHeight: 100)
-										//.onAppear(perform: resetCounters)
-								} else {
-									AutomaticRowCounter(rowsOfRows: mainViewModel.rowsOfRows, totalRowCount: $mainViewModel.totalNumberOfRowsAutomatic, rowCountPicker: $mainViewModel.rowCountPicker, numberOfRows: $mainViewModel.numberOfRowsManual)
-										.frame(maxHeight: 100)
-										//.onAppear(perform: resetCounters)
-								}
+							.frame(maxHeight: 100)
+						//.onAppear(perform: resetCounters)
+					} else {
+						AutomaticRowCounter(rowsOfRows: mainViewModel.rowsOfRows, totalRowCount: $mainViewModel.totalNumberOfRowsAutomatic, rowCountPicker: $mainViewModel.rowCountPicker, numberOfRows: $mainViewModel.numberOfRowsManual)
+							.frame(maxHeight: 100)
+						//.onAppear(perform: resetCounters)
+					}
 				}
-				RoundedRectangle(cornerRadius: 12)
-					.frame(maxHeight: 2)
-					.padding(.vertical, 10)
-					.foregroundStyle(.flameOrange)
+				DividerView()
 				
 				VStack(spacing: 0) {
 					ToggleView(incomingBool: $mainViewModel.showExtraButton, trueString: "Show Yarn Notes", falseString: "Show Extra Button")
@@ -82,7 +79,7 @@ struct MainView: View {
 					}
 				}
 				.animation(.easeInOut(duration: 0.2), value: mainViewModel.showExtraButton)
-				}
+			}
 			.padding()
 		}
 		//.scrollDisabled(!showTextEditor)
@@ -93,32 +90,37 @@ struct MainView: View {
 				createInitialYarnNotes()
 			}
 			
-			UIApplication.shared.isIdleTimerDisabled = true
+			if !isPreviewMode {
+				UIApplication.shared.isIdleTimerDisabled = true
+			}
 		}
-		.onChange(of: mainViewModel.numberOfRowsManual) { oldValue, newValue in
-			UserDefaults.standard.set(newValue, forKey: "numberOfRowsManual")
+		.onDisappear {
+			if !isPreviewMode {
+				UIApplication.shared.isIdleTimerDisabled = false
+			}
+		}
+		.onChange(of: mainViewModel.numberOfRowsManual) { _, newValue in
+			saveToUserDefaults(value: newValue, key: "numberOfRowsManual")
 		}
 		
-		.onChange(of: mainViewModel.rowsOfRowsManual) { oldValue, newValue in
-			UserDefaults.standard.set(newValue, forKey: "rowsOfRowsManual")
+		.onChange(of: mainViewModel.rowsOfRowsManual) { _, newValue in
+			saveToUserDefaults(value: newValue, key: "rowsOfRowsManual")
 		}
-		.onChange(of: mainViewModel.totalNumberOfRowsAutomatic) { oldValue, newValue in
-			UserDefaults.standard.set(newValue, forKey: "totalNumberOfRows")
+		.onChange(of: mainViewModel.totalNumberOfRowsAutomatic) { _, newValue in
+			saveToUserDefaults(value: newValue, key: "totalNumberOfRows")
 		}
-		.onChange(of: mainViewModel.countByPicker) { oldValue, newValue in
-			UserDefaults.standard.set(newValue, forKey: "countByPicker")
+		.onChange(of: mainViewModel.countByPicker) { _, newValue in
+			saveToUserDefaults(value: newValue, key: "countByPicker")
 		}
 		.onChange(of: mainViewModel.rowCountPicker) { oldValue, newValue in
 			if oldValue != newValue {
 				print("The new value is set: \(newValue)")
-				UserDefaults.standard.set(newValue, forKey: "rowCountPicker")
+				saveToUserDefaults(value: newValue, key: "rowCountPicker")
 			}
-		}
-		.onDisappear {
-			UIApplication.shared.isIdleTimerDisabled = false
 		}
 	}
 	private func createInitialYarnNotes() {
+		guard !isPreviewMode else { return }
 		let initialYarnDetail = YarnNotes(text: "")
 		modelContext.insert(initialYarnDetail)
 		
@@ -128,6 +130,16 @@ struct MainView: View {
 		} catch {
 			print("Failed to create initial Yarn Note: \(error)")
 		}
+	}
+	
+	private var isPreviewMode: Bool {
+			ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+		}
+	
+	private func saveToUserDefaults<T>(value: T, key: String) {
+		if isPreviewMode { return }
+		UserDefaults.standard.set(value, forKey: key)
+
 	}
 }
 
