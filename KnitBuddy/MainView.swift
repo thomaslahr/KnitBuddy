@@ -12,77 +12,41 @@ struct MainView: View {
 	@Environment(\.modelContext) private var modelContext
 	@Query var yarnDetails: [YarnNotes]
 	
-	//Manual counter
-	@State private var numberOfRowsManual = UserDefaults.standard.integer(forKey: "numberOfRowsManual")
-	@State private var rowsOfRowsManual = UserDefaults.standard.integer(forKey: "rowsOfRowsManual")
-	
-	//Automatic counter
-	@AppStorage("useAutomaticCounter") var useAutomaticCounter: Bool = false
-	
-	@State private var totalNumberOfRowsAutomatic = UserDefaults.standard.integer(forKey: "totalNumberOfRows")
-	
-	//Pickers
-	@State private var rowCountPicker = UserDefaults.standard.integer(forKey: "rowCountPicker") != 0 ? UserDefaults.standard.integer(forKey: "rowCountPicker") : 4
-	
-	@State private var countByPicker = UserDefaults.standard.integer(forKey: "countByPicker") != 0 ? UserDefaults.standard.integer(forKey: "countByPicker") : 1
-	
-	//Bools
-	@AppStorage("showExtraButton") var showExtraButton: Bool = false
-	@State private var showAlert = false
-	
-	var rowsOfRows: Int {
-		let denominator = rowCountPicker * countByPicker
-		return denominator == 0 ? 0 : totalNumberOfRowsAutomatic / denominator
-	}
+	@StateObject private var mainViewModel = MainViewModel()
 
 	var body: some View {
 		ScrollView {
-			VStack {
-//				Text("Number of rows: \(numberOfRowsManual)")
-//				Text("Total number of rows: \(totalNumberOfRowsAutomatic)")
-//				Text("Rows of rows: \(rowsOfRows)")
-			}
 			VStack(spacing: 5) {
 				TitleView(title: "KnitBuddy")
 				VStack(spacing: 5) {
 					CounterView(
-						numberOfRows: $numberOfRowsManual,
-						countByPicker: $countByPicker,
-						totalRowCount: $totalNumberOfRowsAutomatic,
-						rowCountPicker: $rowCountPicker,
-						useAutomaticCounter: useAutomaticCounter,
-						rowsOfRows: rowsOfRows
+						numberOfRows: $mainViewModel.numberOfRowsManual,
+						countByPicker: $mainViewModel.countByPicker,
+						totalRowCount: $mainViewModel.totalNumberOfRowsAutomatic,
+						rowCountPicker: $mainViewModel.rowCountPicker,
+						useAutomaticCounter: mainViewModel.useAutomaticCounter,
+						rowsOfRows: mainViewModel.rowsOfRows
 					)
 					
 					CounterSuppView(
-						numberOfRows: $numberOfRowsManual,
-						totalNumberOfRows: $totalNumberOfRowsAutomatic,
-						countBy: $countByPicker
+						numberOfRows: $mainViewModel.numberOfRowsManual,
+						totalNumberOfRows: $mainViewModel.totalNumberOfRowsAutomatic,
+						countBy: $mainViewModel.countByPicker
 					)
 				}
 				
-				RoundedRectangle(cornerRadius: 12)
-					.frame(maxHeight: 2)
-					.padding(.vertical, 10)
-					.foregroundStyle(.flameOrange)
+				DividerView()
 				
 				VStack {
-					ToggleView(incomingBool: $useAutomaticCounter, trueString: "Switch to Manual Counter", falseString: "Switch to Automatic Counter")
-					
-					
-//					Text("Number of Sections (Rows of Rows)")
-//						.foregroundStyle(.flameOrange)
-//						.font(.caption)
-//						.fontWeight(.semibold)
-//						.frame(maxWidth: .infinity, alignment: .leading)
+					ToggleView(incomingBool: $mainViewModel.useAutomaticCounter, trueString: "Switch to Manual Counter", falseString: "Switch to Automatic Counter")
 					
 							
-					if !useAutomaticCounter {
-									ManualRowCounter(rowsOfRowsManual: $rowsOfRowsManual, numberOfRows: $numberOfRowsManual)
+					if !mainViewModel.useAutomaticCounter {
+						ManualRowCounter(rowsOfRowsManual: $mainViewModel.rowsOfRowsManual, numberOfRows: $mainViewModel.numberOfRowsManual)
 										.frame(maxHeight: 100)
 										//.onAppear(perform: resetCounters)
 								} else {
-									AutomaticRowCounter(rowsOfRows: rowsOfRows, totalRowCount: $totalNumberOfRowsAutomatic, rowCountPicker: $rowCountPicker, numberOfRows: $numberOfRowsManual)
+									AutomaticRowCounter(rowsOfRows: mainViewModel.rowsOfRows, totalRowCount: $mainViewModel.totalNumberOfRowsAutomatic, rowCountPicker: $mainViewModel.rowCountPicker, numberOfRows: $mainViewModel.numberOfRowsManual)
 										.frame(maxHeight: 100)
 										//.onAppear(perform: resetCounters)
 								}
@@ -91,21 +55,22 @@ struct MainView: View {
 					.frame(maxHeight: 2)
 					.padding(.vertical, 10)
 					.foregroundStyle(.flameOrange)
+				
 				VStack(spacing: 0) {
-					ToggleView(incomingBool: $showExtraButton, trueString: "Show Yarn Notes", falseString: "Show Extra Button")
-					if showExtraButton {
+					ToggleView(incomingBool: $mainViewModel.showExtraButton, trueString: "Show Yarn Notes", falseString: "Show Extra Button")
+					if mainViewModel.showExtraButton {
 						
 						ExtraButtonView(
-							numberOfRows: $numberOfRowsManual,
-							totalNumberOfRows: $totalNumberOfRowsAutomatic,
-							useAutomaticCounter: useAutomaticCounter,
-							countByPicker: countByPicker,
-							rowCountPicker: rowCountPicker
+							numberOfRows: $mainViewModel.numberOfRowsManual,
+							totalNumberOfRows: $mainViewModel.totalNumberOfRowsAutomatic,
+							useAutomaticCounter: mainViewModel.useAutomaticCounter,
+							countByPicker: mainViewModel.countByPicker,
+							rowCountPicker: mainViewModel.rowCountPicker
 						)
 						.padding(.vertical)
 					} else {
 						if let yarnDetail = yarnDetails.first {
-							if !showExtraButton {
+							if !mainViewModel.showExtraButton {
 								TextEditorView(
 									yarnDetails: Binding(
 										get: { yarnDetail.text },
@@ -116,7 +81,7 @@ struct MainView: View {
 						}
 					}
 				}
-				.animation(.easeInOut(duration: 0.2), value: showExtraButton)
+				.animation(.easeInOut(duration: 0.2), value: mainViewModel.showExtraButton)
 				}
 			.padding()
 		}
@@ -130,20 +95,20 @@ struct MainView: View {
 			
 			UIApplication.shared.isIdleTimerDisabled = true
 		}
-		.onChange(of: numberOfRowsManual) { oldValue, newValue in
+		.onChange(of: mainViewModel.numberOfRowsManual) { oldValue, newValue in
 			UserDefaults.standard.set(newValue, forKey: "numberOfRowsManual")
 		}
 		
-		.onChange(of: rowsOfRowsManual) { oldValue, newValue in
+		.onChange(of: mainViewModel.rowsOfRowsManual) { oldValue, newValue in
 			UserDefaults.standard.set(newValue, forKey: "rowsOfRowsManual")
 		}
-		.onChange(of: totalNumberOfRowsAutomatic) { oldValue, newValue in
+		.onChange(of: mainViewModel.totalNumberOfRowsAutomatic) { oldValue, newValue in
 			UserDefaults.standard.set(newValue, forKey: "totalNumberOfRows")
 		}
-		.onChange(of: countByPicker) { oldValue, newValue in
+		.onChange(of: mainViewModel.countByPicker) { oldValue, newValue in
 			UserDefaults.standard.set(newValue, forKey: "countByPicker")
 		}
-		.onChange(of: rowCountPicker) { oldValue, newValue in
+		.onChange(of: mainViewModel.rowCountPicker) { oldValue, newValue in
 			if oldValue != newValue {
 				print("The new value is set: \(newValue)")
 				UserDefaults.standard.set(newValue, forKey: "rowCountPicker")
@@ -163,11 +128,6 @@ struct MainView: View {
 		} catch {
 			print("Failed to create initial Yarn Note: \(error)")
 		}
-	}
-	private func resetCounters() {
-		totalNumberOfRowsAutomatic = 0
-		numberOfRowsManual = 0
-		
 	}
 }
 
