@@ -43,12 +43,7 @@ struct MainView: View {
 //				Text("Rows of rows: \(rowsOfRows)")
 			}
 			VStack(spacing: 5) {
-				Text("KnitBuddy")
-					.font(.largeTitle)
-					.fontWeight(.black)
-					.fontDesign(.rounded)
-					.padding(5)
-					.foregroundStyle(.flameOrange)
+				TitleView(title: "KnitBuddy")
 				VStack(spacing: 5) {
 					CounterView(
 						numberOfRows: $numberOfRowsManual,
@@ -72,12 +67,8 @@ struct MainView: View {
 					.foregroundStyle(.flameOrange)
 				
 				VStack {
-					Toggle(isOn: $useAutomaticCounter) {
-						Text(useAutomaticCounter ? "Switch to Manual Counter" : "Switch to Automatic Counter")
-							.foregroundStyle(.black)
-							.fontWeight(.semibold)
-					}
-					.padding(.trailing, 5)
+					ToggleView(incomingBool: $useAutomaticCounter, trueString: "Switch to Manual Counter", falseString: "Switch to Automatic Counter")
+					
 					
 //					Text("Number of Sections (Rows of Rows)")
 //						.foregroundStyle(.flameOrange)
@@ -101,10 +92,7 @@ struct MainView: View {
 					.padding(.vertical, 10)
 					.foregroundStyle(.flameOrange)
 				VStack(spacing: 0) {
-					Toggle(showExtraButton ? "Show Yarn Notes" : "Show Extra Button", isOn: $showExtraButton)
-						.foregroundStyle(.black)
-						.fontWeight(.semibold)
-						.padding(.trailing, 5)
+					ToggleView(incomingBool: $showExtraButton, trueString: "Show Yarn Notes", falseString: "Show Extra Button")
 					if showExtraButton {
 						
 						ExtraButtonView(
