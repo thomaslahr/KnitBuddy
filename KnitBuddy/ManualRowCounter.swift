@@ -10,11 +10,12 @@ import SwiftUI
 struct ManualRowCounter: View {
 	@Binding var rowsOfRowsManual: Int
 	@Binding var numberOfRows: Int
+	let title: String
 	
 	var body: some View {
 		HStack {
 			HStack {
-				Text("MANUAL")
+				Text(title.uppercased())
 					.foregroundStyle(.peachBeige)
 					.fontDesign(.rounded)
 					.font(.system(size: 10))
@@ -75,5 +76,5 @@ struct ManualRowCounter: View {
 
 #Preview {
 	
-	ManualRowCounter(rowsOfRowsManual: .constant(1), numberOfRows: .constant(1))
+	ManualRowCounter(rowsOfRowsManual: .constant(1), numberOfRows: .constant(1), title: "Manual")
 }

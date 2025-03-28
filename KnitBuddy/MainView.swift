@@ -42,7 +42,7 @@ struct MainView: View {
 					
 					
 					if !mainViewModel.useAutomaticCounter {
-						ManualRowCounter(rowsOfRowsManual: $mainViewModel.rowsOfRowsManual, numberOfRows: $mainViewModel.numberOfRowsManual)
+						ManualRowCounter(rowsOfRowsManual: $mainViewModel.rowsOfRowsManual, numberOfRows: $mainViewModel.numberOfRowsManual, title: "Manual")
 							.frame(maxHeight: 100)
 						//.onAppear(perform: resetCounters)
 					} else {
