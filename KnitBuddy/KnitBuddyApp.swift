@@ -12,7 +12,7 @@ import SwiftData
 struct KnitBuddyApp: App {
     var body: some Scene {
         WindowGroup {
-            MainView()
+			MainView()
         }
 		.modelContainer(for: [YarnNotes.self, RowNumber.self, Counter.self])
     }

@@ -14,8 +14,9 @@ struct TitleView: View {
 			.font(.largeTitle)
 			.fontWeight(.black)
 			.fontDesign(.rounded)
-			.padding(5)
 			.foregroundStyle(.flameOrange)
+			.padding(5)
+			.frame(maxWidth: .infinity)
     }
 }
 

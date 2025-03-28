@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct MainView: View {
+struct SimpleCounter: View {
 	@Environment(\.modelContext) private var modelContext
 	@Query var yarnDetails: [YarnNotes]
 	
@@ -144,6 +144,6 @@ struct MainView: View {
 }
 
 #Preview {
-	MainView()
+	SimpleCounter()
 		.modelContainer(for: YarnNotes.self, inMemory: true)
 }
