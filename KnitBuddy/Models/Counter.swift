@@ -13,6 +13,7 @@ class Counter {
 	var name: String
 	var rows = 0
 	var counterColor: String
+	var isLocked = false
 	
 	init(name: String, counterColor: String = "flameOrange") {
 		self.name = name

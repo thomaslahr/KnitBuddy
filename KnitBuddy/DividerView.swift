@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct DividerView: View {
+	
+	let color: Color
+	
     var body: some View {
 		RoundedRectangle(cornerRadius: 12)
 			.frame(maxHeight: 2)
 			.padding(.vertical, 10)
-			.foregroundStyle(.flameOrange)
+			.foregroundStyle(color)
     }
 }
 
 #Preview {
-    DividerView()
+	DividerView(color: .flameOrange)
 }

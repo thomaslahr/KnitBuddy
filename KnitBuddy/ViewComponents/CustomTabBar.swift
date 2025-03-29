@@ -47,6 +47,7 @@ struct CustomTabBar: View {
 			RoundedRectangle(cornerRadius: 20)
 				.fill(GradientColors.primaryAppColor)
 		}
+		.shadow(color: .lightBlack.opacity(0.2), radius: 5)
 	}
 }
 

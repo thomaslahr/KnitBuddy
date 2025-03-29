@@ -17,24 +17,32 @@ struct CustomCounterComponentView: View {
 	
 	
 	var body: some View {
-		HStack {
+		HStack(spacing: 0) {
 			HStack {
-				Text(counter.name.uppercased())
-					.foregroundStyle(.peachBeige)
-					.fontDesign(.rounded)
-					.font(.system(size: 10))
-					.fontWeight(.bold)
-					.fixedSize()
-					.frame(width: 20, height: 80)
-					.rotationEffect(.degrees(270))
-					.padding(.leading, -15)
-				Group {
+				HStack(spacing: 15) {
+					//Delete button
 					Button {
 						showingAlert.toggle()
 					} label: {
 						Image(systemName: "trash.circle")
+							.frame(width: 40, height: 40)
+					}
+					.disabled(counter.isLocked)
+					
+					//Lock button
+					Button {
+						withAnimation(.linear(duration: 0.1)){
+							counter.isLocked.toggle()
+						}
+						saveChanges()
+					} label: {
+						Image(systemName: counter.isLocked ? "lock.fill" : "lock.open.fill")
+							.frame(width: 40, height: 40)
+							.foregroundStyle(.peachBeige)
 					}
 					
+					
+					// Minus button
 					Button {
 						if counter.rows > 0 {
 							counter.rows -= 1
@@ -43,26 +51,27 @@ struct CustomCounterComponentView: View {
 					} label: {
 						Image(systemName: "minus.circle")
 					}
-					.padding(.horizontal, 20)
+					.disabled(counter.isLocked)
 				}
 				.font(.system(size: 40))
 				.fontWeight(.bold)
 				
 				Spacer()
-				
+				//Counter text view
 				Text("\((counter.rows))")
-					.font(.system(size: 55))
+					.font(.system(size: counter.rows > 9 ? 35 : 50))
 					.fontWeight(.semibold)
 					.foregroundStyle(.white)
 			}
-			.frame(maxHeight: 100)
+			.frame(maxWidth: .infinity, maxHeight: 100)
 			.padding(.horizontal, 20)
-			.foregroundStyle(.peachBeige)
+			.foregroundStyle(counter.isLocked ? .lightBlack : .peachBeige)
 			.background {
 				RoundedRectangle(cornerRadius: 8)
 				//	.fill((Color(.systemGray6)))
 					.fill(counter.color)
 			}
+			// Add to counter button
 			HStack {
 				Button {
 					counter.rows += 1
@@ -72,10 +81,13 @@ struct CustomCounterComponentView: View {
 						.font(.system(size: 90))
 						.fontWeight(.semibold)
 						//.foregroundStyle(GradientColors.primaryAppColor)
-						.foregroundStyle(counter.color)
+						.foregroundStyle(counter.isLocked ? .lightBlack : counter.color)
 				}
+				.disabled(counter.isLocked)
 			}
 		}
+		.transition(.opacity)
+		.animation(.linear(duration: 0.15), value: counter.isLocked)
 		.alert("Delete Habit?", isPresented: $showingAlert) {
 			Button("Cancel", role: .cancel, action: { })
 			Button("Delete", role: .destructive, action: deleteCounter)
@@ -97,8 +109,7 @@ struct CustomCounterComponentView: View {
 		saveChanges()
 		dismiss()
 	}
-	
-	
+
 }
 
 #Preview {

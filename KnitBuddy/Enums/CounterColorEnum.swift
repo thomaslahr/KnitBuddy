@@ -12,7 +12,9 @@ enum CounterColorEnum: String, CaseIterable {
 	case flameOrange = "flameOrange"
 	case jungleTeal = "jungleTeal"
 	case stormBlue = "stromBlue"
-	case mangoYellow = "mangoYellow"
+	case oliveGreen = "oliveGreen"
+	case woodBrown = "woodBrown"
+	case wineBurgundy = "wineBurgundy"
 	
 	var color: Color {
 		
@@ -23,8 +25,12 @@ enum CounterColorEnum: String, CaseIterable {
 				.jungleTeal
 		case .stormBlue:
 				.stormBlue
-		case .mangoYellow:
-				.mangoYellow
+		case .oliveGreen:
+				.oliveGreen
+		case .woodBrown:
+				.woodBrown
+		case .wineBurgundy:
+				.wineBurgundy
 		}
 	}
 }

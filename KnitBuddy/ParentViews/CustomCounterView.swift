@@ -33,17 +33,23 @@ struct CustomCounterView: View {
 						let counter = counters[index]
 						
 						Text(counter.name.uppercased())
+							.frame(maxWidth: .infinity, alignment: .leading)
 							.foregroundStyle(counter.color)
 							.fontWeight(.bold)
 						
 						CustomCounterComponentView(counter: counter)
+							.transition(.asymmetric(
+								insertion: .move(edge: .trailing)
+									.combined(with: .opacity),
+								removal: .opacity))
 						
 						if index < counters.count - 1 {
-							DividerView()
+							DividerView(color: counter.color)
 						}
 					}
 					.padding(.horizontal)
 				}
+				.animation(.linear(duration: 0.15), value: counters.count)
 				.padding(.bottom, 50)
 				
 
@@ -63,3 +69,4 @@ struct CustomCounterView: View {
     CustomCounterView()
 		.modelContainer(for: Counter.self, inMemory: true)
 }
+

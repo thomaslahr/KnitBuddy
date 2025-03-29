@@ -11,8 +11,10 @@ import SwiftUI
 struct CustomCounterSheetView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.modelContext) private var modelContext
+	@FocusState var isInputActive: Bool
 	@State private var counterName = ""
 	@State private var selectedColor = CounterColorEnum.flameOrange.rawValue
+	
 	
 	let colors = CounterColorEnum.allCases
 	
@@ -27,12 +29,14 @@ struct CustomCounterSheetView: View {
 			}
 			.foregroundStyle(.black)
 			.padding()
+			.focused($isInputActive)
 			.background {
 				RoundedRectangle(cornerRadius: 12)
 					.fill(.white)
 					.shadow(radius: 2)
 				
 			}
+
 			.padding(.horizontal)
 			
 			VStack(spacing: 10) {
@@ -79,6 +83,9 @@ struct CustomCounterSheetView: View {
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background(.peachBeige)
+		.onAppear {
+			isInputActive = true
+		}
     }
 }
 

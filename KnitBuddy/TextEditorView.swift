@@ -11,6 +11,7 @@ import SwiftData
 struct TextEditorView: View {
 	@Binding var yarnDetails: String
 	@Environment(\.modelContext) private var modelContext
+	@FocusState var isInputActive: Bool
 	@State private var debounceTimer: Timer?
 	
 	@Query var existingYarnDetail: [YarnNotes]
@@ -35,6 +36,15 @@ struct TextEditorView: View {
 				}
 				//.submitLabel(.done)
 				.frame(minHeight: 250)
+				.focused($isInputActive)
+				.toolbar {
+					ToolbarItemGroup(placement: .keyboard) {
+						Spacer()
+						Button("Done") {
+							isInputActive = false
+						}
+					}
+				}
 				.onChange(of: yarnDetails) { oldValue, newValue in
 					debounceSave(newValue)
 				}
