@@ -10,11 +10,13 @@ import SwiftUI
 
 struct CustomCounterView: View {
 	@Query var counters: [Counter]
+	
 	@State private var isAddingCounter = false
 	
     var body: some View {
+		let firstCounterColor = counters.first?.color ?? .flameOrange
 		VStack {
-			TitleView(title: "Stitch Counters", size: 28.0, colorStyle: GradientColors.custom(counters.first?.color ?? .flameOrange).gradient)
+			TitleView(title: "Stitch Counters", size: 28.0, colorStyle: GradientColors.custom(firstCounterColor).gradient)
 				.frame(maxWidth: .infinity)
 				.overlay(alignment: .trailing) {
 					Button {
@@ -23,10 +25,11 @@ struct CustomCounterView: View {
 						Image(systemName: "plus.circle")
 							.font(.system(size: 40))
 							.fontWeight(.light)
-							.foregroundStyle(.flameOrange)
+							.foregroundStyle(firstCounterColor)
 					}
 					.padding(.trailing, 20)
 				}
+			
 			ScrollView {
 				VStack(spacing: 0) {
 					ForEach(counters.indices, id: \.self) { index in
@@ -67,7 +70,7 @@ struct CustomCounterView: View {
 }
 
 #Preview {
-    CustomCounterView()
+	CustomCounterView()
 		.modelContainer(for: Counter.self, inMemory: true)
 }
 

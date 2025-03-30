@@ -103,7 +103,9 @@ struct SimpleCounter: View {
 										yarnDetails: Binding(
 											get: { yarnDetail.text },
 											set: { yarnDetail.text = $0 }
-										))
+										),
+										viewTitle: "Notes",
+										viewHeight: 250)
 									.transition(.opacity)
 								}
 							}

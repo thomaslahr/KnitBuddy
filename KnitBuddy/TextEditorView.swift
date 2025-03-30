@@ -14,11 +14,14 @@ struct TextEditorView: View {
 	@FocusState var isInputActive: Bool
 	@State private var debounceTimer: Timer?
 	
+	let viewTitle: String
+	let viewHeight: CGFloat
+	
 	@Query var existingYarnDetail: [YarnNotes]
 	
     var body: some View {
 		VStack{
-			Text("Yarn Notes")
+			Text(viewTitle)
 				.fontWeight(.semibold)
 				.frame(maxWidth: .infinity, alignment: .leading)
 				.foregroundStyle(.black)
@@ -28,14 +31,13 @@ struct TextEditorView: View {
 				.cornerRadius(10)
 				.padding(5)
 				.scrollContentBackground(.hidden)
-				//.background(Color(.systemGray6))
 				.background(.peachBeige)
 				.overlay {
 					RoundedRectangle(cornerRadius: 8)
 						.stroke(.flameOrange, lineWidth: 2)
 				}
 				//.submitLabel(.done)
-				.frame(minHeight: 250)
+				.frame(minHeight: viewHeight)
 				.focused($isInputActive)
 				.toolbar {
 					ToolbarItemGroup(placement: .keyboard) {
@@ -103,6 +105,6 @@ struct TextEditorView: View {
 }
 
 #Preview {
-	TextEditorView(yarnDetails: .constant("This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn."))
+	TextEditorView(yarnDetails: .constant("This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn."), viewTitle: "Notes", viewHeight: 250)
 		.frame(maxHeight: 400)
 }

@@ -10,10 +10,10 @@ import SwiftUI
 
 
 struct CustomCounterComponentView: View {
-	@Environment(\.dismiss) private var dismiss
 	@Environment(\.modelContext) private var modelContext
 	@Bindable var counter: Counter
-	@State private var showingAlert = false
+	
+	@State private var navigateToNotes = false
 	
 	
 	var body: some View {
@@ -22,12 +22,14 @@ struct CustomCounterComponentView: View {
 				HStack(spacing: 15) {
 					//Delete button
 					Button {
-						showingAlert.toggle()
+						//showingAlert.toggle()
+						navigateToNotes.toggle()
 					} label: {
-						Image(systemName: "trash.circle")
+						Image(systemName: "info.circle")
 							.frame(width: 40, height: 40)
+							.foregroundStyle(.peachBeige)
 					}
-					.disabled(counter.isLocked)
+					//.disabled(counter.isLocked)
 					
 					//Lock button
 					Button {
@@ -88,11 +90,8 @@ struct CustomCounterComponentView: View {
 		}
 		.transition(.opacity)
 		.animation(.linear(duration: 0.15), value: counter.isLocked)
-		.alert("Delete Habit?", isPresented: $showingAlert) {
-			Button("Cancel", role: .cancel, action: { })
-			Button("Delete", role: .destructive, action: deleteCounter)
-		} message: {
-			Text("Are you sure? This cannot be undone.")
+		.navigationDestination(isPresented: $navigateToNotes) {
+			NotesView(counter: counter)
 		}
 	}
 	
@@ -103,13 +102,6 @@ struct CustomCounterComponentView: View {
 			print(error.localizedDescription)
 		}
 	}
-
-	private func deleteCounter() {
-		modelContext.delete(counter)
-		saveChanges()
-		dismiss()
-	}
-
 }
 
 #Preview {

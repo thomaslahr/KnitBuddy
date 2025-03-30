@@ -14,7 +14,7 @@ struct KnitBuddyApp: App {
         WindowGroup {
 			MainView()
         }
-		.modelContainer(for: [YarnNotes.self, RowNumber.self, Counter.self])
+		.modelContainer(for: [YarnNotes.self, RowNumber.self, Counter.self, CounterNotes.self])
     }
 	
 	init() {

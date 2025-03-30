@@ -10,15 +10,16 @@ import SwiftUI
 struct SmallTitleView: View {
 	let title: String
 	let size: CGFloat
+	let color: Color
     var body: some View {
 		Text(title.uppercased())
 			.font(.system(size: size))
 			.fontWeight(.bold)
 			.fontDesign(.rounded)
-			.foregroundStyle(.flameOrange)
+			.foregroundStyle(color)
     }
 }
 
 #Preview {
-	SmallTitleView(title: "Number of Stitches", size: 15)
+	SmallTitleView(title: "Number of Stitches", size: 15, color: .flameOrange)
 }

@@ -13,18 +13,20 @@ struct MainView: View {
 	@StateObject private var keyboardObserver = KeyboardObserver()
 	
     var body: some View {
-		VStack {
-			switch selectedTab {
-			case .simpleCounter:
-				SimpleCounter()
-			case .customCounter:
-				CustomCounterView()
+		NavigationStack {
+			VStack {
+				switch selectedTab {
+				case .simpleCounter:
+					SimpleCounter()
+				case .customCounter:
+					CustomCounterView()
+				}
 			}
-		}
-		.overlay(alignment: .bottom) {
-			if !keyboardObserver.isKeyboardVisible {
-							CustomTabBar(selectedTab: $selectedTab)
-						}
+			.overlay(alignment: .bottom) {
+				if !keyboardObserver.isKeyboardVisible {
+								CustomTabBar(selectedTab: $selectedTab)
+							}
+			}
 		}
     }
 }

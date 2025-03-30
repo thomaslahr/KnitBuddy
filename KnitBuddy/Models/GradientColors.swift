@@ -15,7 +15,7 @@ enum GradientColors {
 	var gradient: LinearGradient {
 		switch self {
 		case .custom(let userColor):
-			return LinearGradient(colors: [userColor.opacity(0.7), userColor.opacity(0.9)], startPoint: .leading, endPoint: .trailing)
+			return LinearGradient(colors: [userColor.opacity(0.6), userColor.opacity(0.9)], startPoint: .leading, endPoint: .trailing)
 		}
 	}
 }

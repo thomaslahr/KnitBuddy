@@ -19,7 +19,7 @@ struct CounterView: View {
     var body: some View {
 		HStack {
 			VStack {
-				SmallTitleView(title: "Number of stitches", size: 15)
+				SmallTitleView(title: "Number of stitches", size: 15, color: .flameOrange)
 				Text("\(numberOfStitches)")
 						.font(.system(size: 100))
 						.foregroundStyle(.white)
