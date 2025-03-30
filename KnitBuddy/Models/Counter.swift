@@ -11,13 +11,14 @@ import SwiftData
 @Model
 class Counter {
 	var name: String
-	var rows = 0
+	var rows: Int
 	var counterColor: String
 	var isLocked = false
 	
-	init(name: String, counterColor: String = "flameOrange") {
+	init(name: String, counterColor: String = "flameOrange", rows: Int = 0) {
 		self.name = name
 		self.counterColor = counterColor
+		self.rows = rows
 	}
 }
 

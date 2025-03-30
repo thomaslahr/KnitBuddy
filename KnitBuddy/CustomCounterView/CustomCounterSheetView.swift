@@ -9,11 +9,13 @@ import SwiftData
 import SwiftUI
 
 struct CustomCounterSheetView: View {
+	let comesFromSimpleCounter: Bool
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.modelContext) private var modelContext
 	@FocusState var isInputActive: Bool
 	@State private var counterName = ""
 	@State private var selectedColor = CounterColorEnum.flameOrange.rawValue
+	let numberOfRows: Int
 	
 	
 	let colors = CounterColorEnum.allCases
@@ -22,7 +24,7 @@ struct CustomCounterSheetView: View {
     var body: some View {
 		VStack {
 			//Titleview
-			TitleView(title: "Create a new counter")
+			TitleView(title: comesFromSimpleCounter ? "Add Stitches to New Counter" : "Create a new counter", size: 24.0, colorStyle: .flameOrange)
 			TextField(text: $counterName) {
 				Text("Enter name of counter")
 					.foregroundStyle(.lightBlack)
@@ -38,7 +40,19 @@ struct CustomCounterSheetView: View {
 			}
 
 			.padding(.horizontal)
-			
+			if comesFromSimpleCounter {
+				HStack(spacing: 5) {
+					TitleView(title: "Number of stitches:", size: 20.0, colorStyle: .flameOrange)
+					Text("\(numberOfRows)")
+							.font(.system(size: 35))
+							.foregroundStyle(.white)
+							.frame(maxWidth: 70, maxHeight: 45)
+							.background {
+								RoundedRectangle(cornerRadius: 12)
+									.fill(GradientColors.primaryAppColor)
+							}
+				}
+			}
 			VStack(spacing: 10) {
 				Text("Choose a Color")
 					.foregroundStyle(.lightBlack)
@@ -64,7 +78,7 @@ struct CustomCounterSheetView: View {
 			}
 			.padding()
 			Button {
-				let newCounter = Counter(name: counterName, counterColor: selectedColor)
+				let newCounter = Counter(name: counterName, counterColor: selectedColor, rows: comesFromSimpleCounter ? numberOfRows : 0)
 				modelContext.insert(newCounter)
 				try? modelContext.save()
 				
@@ -90,5 +104,5 @@ struct CustomCounterSheetView: View {
 }
 
 #Preview {
-    CustomCounterSheetView()
+	CustomCounterSheetView(comesFromSimpleCounter: true, numberOfRows: 45)
 }

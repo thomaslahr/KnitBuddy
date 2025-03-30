@@ -69,7 +69,7 @@ struct CustomCounterComponentView: View {
 			.background {
 				RoundedRectangle(cornerRadius: 8)
 				//	.fill((Color(.systemGray6)))
-					.fill(counter.color)
+					.fill(GradientColors.custom(counter.color).gradient)
 			}
 			// Add to counter button
 			HStack {

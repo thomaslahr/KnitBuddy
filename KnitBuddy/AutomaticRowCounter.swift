@@ -57,7 +57,7 @@ struct AutomaticRowCounter: View {
 									.frame(width: 50, height: 40)
 							}
 						}
-						Text("ROW")
+						Text("STITCH")
 							.font(.caption)
 					}
 					.frame(maxWidth: 200)

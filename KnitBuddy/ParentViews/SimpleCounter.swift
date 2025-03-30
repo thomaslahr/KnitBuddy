@@ -13,25 +13,55 @@ struct SimpleCounter: View {
 	@Query var yarnDetails: [YarnNotes]
 	
 	@StateObject private var mainViewModel = MainViewModel()
+	@State private var isAddingCounter = false
 	
 	var body: some View {
 		VStack {
-			TitleView(title: "KnitBuddy")
+			TitleView(title: "KnitBuddy", size: 28.0, colorStyle: .flameOrange)
+				.frame(maxWidth: .infinity)
+				.overlay(alignment: .trailing) {
+					
+					Button {
+						isAddingCounter.toggle()
+					} label: {
+						//						VStack {
+						//							Text("Add number")
+						//							Text("of stiches")
+						//						}
+						//						.foregroundStyle(GradientColors.primaryAppColor)
+						//						.fontWeight(.bold)
+						//							.font(.system(size: 10))
+						//							.padding(7)
+						//							.background {
+						//								RoundedRectangle(cornerRadius: 12)
+						//									.stroke(GradientColors.primaryAppColor, lineWidth: 2)
+						//							}
+						//
+						//					}
+						//					.padding(.leading, 20)
+						Image(systemName: "plus.circle")
+							.font(.system(size: 40))
+							.fontWeight(.light)
+							.foregroundStyle(GradientColors.primaryAppColor)
+							.padding(.trailing, 20)
+					}
+				}
 			ScrollView {
 				VStack(spacing: 5) {
 					VStack(spacing: 5) {
+						Text("Total number of stitches: \(mainViewModel.totalNumberOfStitchesAutomatic)")
 						CounterView(
-							numberOfRows: $mainViewModel.numberOfRowsManual,
+							numberOfStitches: $mainViewModel.numberOfStitchesManual,
 							countByPicker: $mainViewModel.countByPicker,
-							totalRowCount: $mainViewModel.totalNumberOfRowsAutomatic,
+							totalRowCount: $mainViewModel.totalNumberOfStitchesAutomatic,
 							rowCountPicker: $mainViewModel.rowCountPicker,
 							useAutomaticCounter: mainViewModel.useAutomaticCounter,
 							rowsOfRows: mainViewModel.rowsOfRows
 						)
 						
 						CounterSuppView(
-							numberOfRows: $mainViewModel.numberOfRowsManual,
-							totalNumberOfRows: $mainViewModel.totalNumberOfRowsAutomatic,
+							numberOfRows: $mainViewModel.numberOfStitchesManual,
+							totalNumberOfRows: $mainViewModel.totalNumberOfStitchesAutomatic,
 							countBy: $mainViewModel.countByPicker
 						)
 					}
@@ -39,15 +69,15 @@ struct SimpleCounter: View {
 					DividerView(color: .flameOrange)
 					
 					VStack {
-						ToggleView(incomingBool: $mainViewModel.useAutomaticCounter, trueString: "Switch to Manual Counter", falseString: "Switch to Automatic Counter")
+						ToggleView(incomingBool: $mainViewModel.useAutomaticCounter, trueString: "Switch to Manual Row Counter", falseString: "Switch to Automatic Row Counter")
 						
 						
 						if !mainViewModel.useAutomaticCounter {
-							ManualRowCounter(rowsOfRowsManual: $mainViewModel.rowsOfRowsManual, numberOfRows: $mainViewModel.numberOfRowsManual, title: "Manual")
+							ManualRowCounter(rowsOfRowsManual: $mainViewModel.rowsOfStitchesManual, numberOfRows: $mainViewModel.numberOfStitchesManual, title: "Manual")
 								.frame(maxHeight: 100)
 							//.onAppear(perform: resetCounters)
 						} else {
-							AutomaticRowCounter(rowsOfRows: mainViewModel.rowsOfRows, totalRowCount: $mainViewModel.totalNumberOfRowsAutomatic, rowCountPicker: $mainViewModel.rowCountPicker, numberOfRows: $mainViewModel.numberOfRowsManual)
+							AutomaticRowCounter(rowsOfRows: mainViewModel.rowsOfRows, totalRowCount: $mainViewModel.totalNumberOfStitchesAutomatic, rowCountPicker: $mainViewModel.rowCountPicker, numberOfRows: $mainViewModel.numberOfStitchesManual)
 								.frame(maxHeight: 100)
 							//.onAppear(perform: resetCounters)
 						}
@@ -59,8 +89,8 @@ struct SimpleCounter: View {
 						if mainViewModel.showExtraButton {
 							
 							ExtraButtonView(
-								numberOfRows: $mainViewModel.numberOfRowsManual,
-								totalNumberOfRows: $mainViewModel.totalNumberOfRowsAutomatic,
+								numberOfRows: $mainViewModel.numberOfStitchesManual,
+								totalNumberOfRows: $mainViewModel.totalNumberOfStitchesAutomatic,
 								useAutomaticCounter: mainViewModel.useAutomaticCounter,
 								countByPicker: mainViewModel.countByPicker,
 								rowCountPicker: mainViewModel.rowCountPicker
@@ -99,14 +129,14 @@ struct SimpleCounter: View {
 					UIApplication.shared.isIdleTimerDisabled = false
 				}
 			}
-			.onChange(of: mainViewModel.numberOfRowsManual) { _, newValue in
+			.onChange(of: mainViewModel.numberOfStitchesManual) { _, newValue in
 				saveToUserDefaults(value: newValue, key: "numberOfRowsManual")
 			}
 			
-			.onChange(of: mainViewModel.rowsOfRowsManual) { _, newValue in
+			.onChange(of: mainViewModel.rowsOfStitchesManual) { _, newValue in
 				saveToUserDefaults(value: newValue, key: "rowsOfRowsManual")
 			}
-			.onChange(of: mainViewModel.totalNumberOfRowsAutomatic) { _, newValue in
+			.onChange(of: mainViewModel.totalNumberOfStitchesAutomatic) { _, newValue in
 				saveToUserDefaults(value: newValue, key: "totalNumberOfRows")
 			}
 			.onChange(of: mainViewModel.countByPicker) { _, newValue in
@@ -120,6 +150,10 @@ struct SimpleCounter: View {
 			}
 		}
 		.background(.peachBeige)
+		.sheet(isPresented: $isAddingCounter) {
+			CustomCounterSheetView(comesFromSimpleCounter: true, numberOfRows: mainViewModel.numberOfStitchesManual)
+				.presentationDetents([.medium])
+		}
 	}
 	private func createInitialYarnNotes() {
 		guard !isPreviewMode else { return }
@@ -135,13 +169,13 @@ struct SimpleCounter: View {
 	}
 	
 	private var isPreviewMode: Bool {
-			ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
-		}
+		ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+	}
 	
 	private func saveToUserDefaults<T>(value: T, key: String) {
 		if isPreviewMode { return }
 		UserDefaults.standard.set(value, forKey: key)
-
+		
 	}
 }
 

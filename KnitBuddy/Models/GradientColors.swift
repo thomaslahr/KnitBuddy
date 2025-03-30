@@ -9,4 +9,13 @@ import SwiftUI
 
 enum GradientColors {
 	static let primaryAppColor = LinearGradient(colors: [.flameOrange, .mangoYellow], startPoint: .leading, endPoint: .trailing)
+	
+	case custom(Color)
+	
+	var gradient: LinearGradient {
+		switch self {
+		case .custom(let userColor):
+			return LinearGradient(colors: [userColor.opacity(0.7), userColor.opacity(0.9)], startPoint: .leading, endPoint: .trailing)
+		}
+	}
 }

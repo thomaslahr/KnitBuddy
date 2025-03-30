@@ -11,14 +11,14 @@ import SwiftData
 // ViewModel should manage your state for rows and UserDefaults
 class MainViewModel: ObservableObject {
 	// Manual counter state
-	@Published var numberOfRowsManual: Int
-	@Published var rowsOfRowsManual: Int
+	@Published var numberOfStitchesManual: Int
+	@Published var rowsOfStitchesManual: Int
 	
 	// Automatic counter state
 	@AppStorage("useAutomaticCounter") var useAutomaticCounter: Bool = false
 	
 	// Automatic counter state
-	@Published var totalNumberOfRowsAutomatic: Int
+	@Published var totalNumberOfStitchesAutomatic: Int
 	
 	// Picker states
 	@Published var rowCountPicker: Int
@@ -29,18 +29,18 @@ class MainViewModel: ObservableObject {
 	
 	// Initializer to set up the state and defaults
 	init() {
-		self.numberOfRowsManual = UserDefaults.standard.integer(forKey: "numberOfRowsManual")
-		self.rowsOfRowsManual = UserDefaults.standard.integer(forKey: "rowsOfRowsManual")
-		self.totalNumberOfRowsAutomatic = UserDefaults.standard.integer(forKey: "totalNumberOfRows")
+		self.numberOfStitchesManual = UserDefaults.standard.integer(forKey: "numberOfRowsManual")
+		self.rowsOfStitchesManual = UserDefaults.standard.integer(forKey: "rowsOfRowsManual")
+		self.totalNumberOfStitchesAutomatic = UserDefaults.standard.integer(forKey: "totalNumberOfRows")
 		self.rowCountPicker = UserDefaults.standard.integer(forKey: "rowCountPicker") != 0 ? UserDefaults.standard.integer(forKey: "rowCountPicker") : 4
 		self.countByPicker = UserDefaults.standard.integer(forKey: "countByPicker") != 0 ? UserDefaults.standard.integer(forKey: "countByPicker") : 1
 	}
 	
 	// Save updated state to UserDefaults
 	func saveToUserDefaults() {
-		UserDefaults.standard.set(numberOfRowsManual, forKey: "numberOfRowsManual")
-		UserDefaults.standard.set(rowsOfRowsManual, forKey: "rowsOfRowsManual")
-		UserDefaults.standard.set(totalNumberOfRowsAutomatic, forKey: "totalNumberOfRows")
+		UserDefaults.standard.set(numberOfStitchesManual, forKey: "numberOfRowsManual")
+		UserDefaults.standard.set(rowsOfStitchesManual, forKey: "rowsOfRowsManual")
+		UserDefaults.standard.set(totalNumberOfStitchesAutomatic, forKey: "totalNumberOfRows")
 		UserDefaults.standard.set(rowCountPicker, forKey: "rowCountPicker")
 		UserDefaults.standard.set(countByPicker, forKey: "countByPicker")
 	}
@@ -48,12 +48,12 @@ class MainViewModel: ObservableObject {
 	// Helper property to calculate rows of rows
 	var rowsOfRows: Int {
 		let denominator = rowCountPicker * countByPicker
-		return denominator == 0 ? 0 : totalNumberOfRowsAutomatic / denominator
+		return denominator == 0 ? 0 : totalNumberOfStitchesAutomatic / denominator
 	}
 	
 	// Function to reset counters
 	func resetCounters() {
-		totalNumberOfRowsAutomatic = 0
-		numberOfRowsManual = 0
+		totalNumberOfStitchesAutomatic = 0
+		numberOfStitchesManual = 0
 	}
 }

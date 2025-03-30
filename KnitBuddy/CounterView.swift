@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CounterView: View {
-	@Binding var numberOfRows: Int
+	@Binding var numberOfStitches: Int
 	@Binding var countByPicker: Int
 	@Binding var totalRowCount: Int
 	@Binding var rowCountPicker: Int
@@ -19,11 +19,8 @@ struct CounterView: View {
     var body: some View {
 		HStack {
 			VStack {
-				Text("NUMBER OF ROWS:")
-					.fontWeight(.bold)
-					.fontDesign(.rounded)
-					.foregroundStyle(.flameOrange)
-				Text("\(numberOfRows)")
+				SmallTitleView(title: "Number of stitches", size: 15)
+				Text("\(numberOfStitches)")
 						.font(.system(size: 100))
 						.foregroundStyle(.white)
 						.frame(maxWidth: .infinity, maxHeight: 130)
@@ -34,16 +31,16 @@ struct CounterView: View {
 				}
 			
 			Button {
-				numberOfRows += countByPicker
+				numberOfStitches += countByPicker
 				totalRowCount += countByPicker
 				
 				if useAutomaticCounter {
 					//Hvis antall rader og row count er det samme
-					if ((numberOfRows - countByPicker) == rowCountPicker) && ((numberOfRows % 2) != 0) {
-						numberOfRows = countByPicker
+					if ((numberOfStitches - countByPicker) == rowCountPicker) && ((numberOfStitches % 2) != 0) {
+						numberOfStitches = countByPicker
 						print("if #1")
-					} else if (numberOfRows - countByPicker) == (rowCountPicker * countByPicker) {
-						numberOfRows = countByPicker
+					} else if (numberOfStitches - countByPicker) == (rowCountPicker * countByPicker) {
+						numberOfStitches = countByPicker
 						print("if #2")
 					} else {
 						print("else")
@@ -55,11 +52,11 @@ struct CounterView: View {
 					.foregroundStyle(GradientColors.primaryAppColor)
 			}
 			.padding(.leading, 5)
-			.sensoryFeedback(.impact(flexibility: .soft, intensity: 0.5), trigger: numberOfRows)
+			.sensoryFeedback(.impact(flexibility: .soft, intensity: 0.5), trigger: numberOfStitches)
 		}
     }
 }
 
 #Preview {
-	CounterView(numberOfRows: .constant(2), countByPicker: .constant(1), totalRowCount: .constant(2), rowCountPicker: .constant(2), useAutomaticCounter: false, rowsOfRows: 4)
+	CounterView(numberOfStitches: .constant(2), countByPicker: .constant(1), totalRowCount: .constant(2), rowCountPicker: .constant(2), useAutomaticCounter: false, rowsOfRows: 4)
 }

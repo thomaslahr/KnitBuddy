@@ -13,6 +13,7 @@ struct ManualRowCounter: View {
 	let title: String
 	
 	var body: some View {
+		//SmallTitleView(title: "Rows of Stitches", size: 15)
 		HStack {
 			HStack {
 				Text(title.uppercased())

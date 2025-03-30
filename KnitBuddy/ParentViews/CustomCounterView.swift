@@ -14,7 +14,8 @@ struct CustomCounterView: View {
 	
     var body: some View {
 		VStack {
-			TitleView(title: "KnitBuddy")
+			TitleView(title: "Stitch Counters", size: 28.0, colorStyle: GradientColors.custom(counters.first?.color ?? .flameOrange).gradient)
+				.frame(maxWidth: .infinity)
 				.overlay(alignment: .trailing) {
 					Button {
 						isAddingCounter.toggle()
@@ -57,7 +58,7 @@ struct CustomCounterView: View {
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.background(.peachBeige)
 			.sheet(isPresented: $isAddingCounter) {
-				CustomCounterSheetView()
+				CustomCounterSheetView(comesFromSimpleCounter: false, numberOfRows: 0)
 					.presentationDetents([.medium])
 			}
 		}

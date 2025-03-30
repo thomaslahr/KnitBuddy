@@ -7,19 +7,23 @@
 
 import SwiftUI
 
-struct TitleView: View {
+struct TitleView<T: ShapeStyle>: View {
 	let title: String
+	let size: CGFloat
+	let colorStyle: T
     var body: some View {
-		Text(title)
-			.font(.largeTitle)
-			.fontWeight(.black)
-			.fontDesign(.rounded)
-			.foregroundStyle(.flameOrange)
-			.padding(5)
-			.frame(maxWidth: .infinity)
+		HStack {
+			Text(title)
+				.font(.system(size: size))
+				.fontWeight(.black)
+				.fontDesign(.rounded)
+				.foregroundStyle(colorStyle)
+				//.padding(5)
+			
+		}
     }
 }
 
 #Preview {
-	TitleView(title: "KnitBuddy")
+	TitleView(title: "KnitBuddy", size: 34.0, colorStyle: .flameOrange)
 }
