@@ -46,7 +46,7 @@ class MainViewModel: ObservableObject {
 	}
 	
 	// Helper property to calculate rows of rows
-	var rowsOfRows: Int {
+	var rowsOfStiches: Int {
 		let denominator = rowCountPicker * countByPicker
 		return denominator == 0 ? 0 : totalNumberOfStitchesAutomatic / denominator
 	}

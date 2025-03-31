@@ -25,7 +25,7 @@ struct CustomCounterComponentView: View {
 						//showingAlert.toggle()
 						navigateToNotes.toggle()
 					} label: {
-						Image(systemName: "info.circle")
+						Image(systemName: "book.pages")
 							.frame(width: 40, height: 40)
 							.foregroundStyle(.peachBeige)
 					}

@@ -8,23 +8,26 @@
 import SwiftUI
 
 struct CounterSuppView: View {
-	@Binding var numberOfRows: Int
+	@Binding var numberOfStitches: Int
 	@Binding var totalNumberOfRows: Int
 	@Binding var countBy: Int
+	@Binding var totalNumberOfStitches: Int
 	
 	var body: some View {
 		HStack {
 			HStack {
 				Button {
-					numberOfRows = 0
+					totalNumberOfStitches -= numberOfStitches
+					numberOfStitches = 0
+					
 				} label: {
 					Image(systemName: "arrow.counterclockwise")
 				}
 				.padding(.horizontal, 12)
 				
 				Button {
-					if numberOfRows > 0 {
-						numberOfRows -= 1
+					if numberOfStitches > 0 {
+						numberOfStitches -= 1
 						totalNumberOfRows -= 1
 					}
 				} label: {
@@ -87,15 +90,15 @@ struct CounterSuppView: View {
 //				.fill(.flameOrange)
 //		}
 		.onChange(of: countBy) {
-			numberOfRows = 0
+			numberOfStitches = 0
 		}
 	}
 	private func resetCounters() {
 		totalNumberOfRows = 0
-		numberOfRows = 0
+		numberOfStitches = 0
 	}
 }
 
 #Preview {
-	CounterSuppView(numberOfRows: .constant(2), totalNumberOfRows: .constant(2), countBy: .constant(1))
+	CounterSuppView(numberOfStitches: .constant(2), totalNumberOfRows: .constant(2), countBy: .constant(1), totalNumberOfStitches: .constant(10))
 }

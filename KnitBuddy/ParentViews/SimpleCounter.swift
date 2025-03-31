@@ -14,6 +14,7 @@ struct SimpleCounter: View {
 	
 	@StateObject private var mainViewModel = MainViewModel()
 	@State private var isAddingCounter = false
+	@State private var showSettings = false
 	
 	var body: some View {
 		VStack {
@@ -46,23 +47,34 @@ struct SimpleCounter: View {
 							.padding(.trailing, 20)
 					}
 				}
+				.overlay(alignment: .leading) {
+					Button {
+						showSettings.toggle()
+					} label: {
+						Image(systemName: "gear")
+							.font(.system(size: 40))
+							.fontWeight(.light)
+							.foregroundStyle(GradientColors.primaryAppColor)
+							.padding(.leading, 20)
+					}
+				}
 			ScrollView {
 				VStack(spacing: 5) {
 					VStack(spacing: 5) {
-						Text("Total number of stitches: \(mainViewModel.totalNumberOfStitchesAutomatic)")
+//						Text("Total number of stitches: \(mainViewModel.totalNumberOfStitchesAutomatic)")
 						CounterView(
 							numberOfStitches: $mainViewModel.numberOfStitchesManual,
 							countByPicker: $mainViewModel.countByPicker,
 							totalRowCount: $mainViewModel.totalNumberOfStitchesAutomatic,
 							rowCountPicker: $mainViewModel.rowCountPicker,
 							useAutomaticCounter: mainViewModel.useAutomaticCounter,
-							rowsOfRows: mainViewModel.rowsOfRows
+							rowsOfRows: mainViewModel.rowsOfStiches
 						)
 						
 						CounterSuppView(
-							numberOfRows: $mainViewModel.numberOfStitchesManual,
+							numberOfStitches: $mainViewModel.numberOfStitchesManual,
 							totalNumberOfRows: $mainViewModel.totalNumberOfStitchesAutomatic,
-							countBy: $mainViewModel.countByPicker
+							countBy: $mainViewModel.countByPicker, totalNumberOfStitches: $mainViewModel.totalNumberOfStitchesAutomatic
 						)
 					}
 					
@@ -77,8 +89,10 @@ struct SimpleCounter: View {
 								.frame(maxHeight: 100)
 							//.onAppear(perform: resetCounters)
 						} else {
-							AutomaticRowCounter(rowsOfRows: mainViewModel.rowsOfRows, totalRowCount: $mainViewModel.totalNumberOfStitchesAutomatic, rowCountPicker: $mainViewModel.rowCountPicker, numberOfRows: $mainViewModel.numberOfStitchesManual)
-								.frame(maxHeight: 100)
+							AutomaticRowCounter(
+								rowsOfStitches: mainViewModel.rowsOfStiches,
+								numberOfStitches: $mainViewModel.numberOfStitchesManual, totalNumberOfStitches: $mainViewModel.totalNumberOfStitchesAutomatic, rowCountPicker: $mainViewModel.rowCountPicker, numberOfRows: $mainViewModel.numberOfStitchesManual)
+							.frame(maxHeight: 100)
 							//.onAppear(perform: resetCounters)
 						}
 					}

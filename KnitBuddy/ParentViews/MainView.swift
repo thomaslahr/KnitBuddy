@@ -28,6 +28,8 @@ struct MainView: View {
 							}
 			}
 		}
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.background(.peachBeige)
     }
 }
 
@@ -38,6 +40,7 @@ struct MainView: View {
 import SwiftUI
 import Combine
 
+
 class KeyboardObserver: ObservableObject {
 	@Published var isKeyboardVisible = false
 	private var cancellables = Set<AnyCancellable>()
@@ -45,13 +48,17 @@ class KeyboardObserver: ObservableObject {
 	init() {
 		NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
 			.sink { _ in
-				self.isKeyboardVisible = true
+				DispatchQueue.main.async {
+					self.isKeyboardVisible = true
+				}
 			}
 			.store(in: &cancellables)
 
 		NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
 			.sink { _ in
-				self.isKeyboardVisible = false
+				DispatchQueue.main.async {
+					self.isKeyboardVisible = false
+				}
 			}
 			.store(in: &cancellables)
 	}

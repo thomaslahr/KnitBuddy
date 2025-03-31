@@ -9,15 +9,19 @@ import SwiftUI
 
 struct AutomaticRowCounter: View {
 	//var testNumber = 999
-	var rowsOfRows: Int
-	@Binding var totalRowCount: Int
+	var rowsOfStitches: Int
+	
+	@Binding var numberOfStitches: Int
+	@Binding var totalNumberOfStitches: Int
 	@Binding var rowCountPicker: Int
 	@Binding var numberOfRows: Int
 	
 	@State private var isTripleDigit = false
+	@State private var resetCounter = false
 	
 	var body: some View {
 		VStack {
+		//	Text("\(numberOfStitches)")
 			HStack {
 				HStack {
 					Text("AUTOMATIC")
@@ -30,7 +34,7 @@ struct AutomaticRowCounter: View {
 						.rotationEffect(.degrees(270))
 						.padding(.leading, -15)
 					Button {
-						totalRowCount = 0
+						resetCounter.toggle()
 					} label: {
 						Image(systemName: "arrow.counterclockwise")
 					}
@@ -64,7 +68,7 @@ struct AutomaticRowCounter: View {
 					.fontWeight(.semibold)
 					
 					HStack {
-						Text("\((rowsOfRows))")
+						Text("\((rowsOfStitches))")
 							.font(.system(size: isTripleDigit ? 40 : 55))
 							.fontWeight(.semibold)
 							.foregroundStyle(.white)
@@ -83,9 +87,19 @@ struct AutomaticRowCounter: View {
 					
 				}
 				.frame(height: 100)
+				.alert("Reset number of stitches", isPresented: $resetCounter) {
+					Button("Cancel", role: .cancel, action: { })
+					Button("Reset", role: .destructive) {
+						totalNumberOfStitches = 0
+						numberOfStitches = 0
+						
+					}
+				} message: {
+					Text("This will reset number of stitches and rows.")
+				}
 				
 				.onChange(of: rowCountPicker) {
-					totalRowCount = 0
+					totalNumberOfStitches = 0
 					//totalRowCount -= numberOfRows
 					numberOfRows = 0
 					
@@ -96,7 +110,7 @@ struct AutomaticRowCounter: View {
 	}
 	
 	private func changeTextSize() {
-		if rowsOfRows > 99 {
+		if rowsOfStitches > 99 {
 			isTripleDigit = true
 		} else {
 			isTripleDigit = false
@@ -105,5 +119,5 @@ struct AutomaticRowCounter: View {
 }
 
 #Preview {
-	AutomaticRowCounter(rowsOfRows: 5, totalRowCount: .constant(12), rowCountPicker: .constant(4), numberOfRows: .constant(5))
+	AutomaticRowCounter(rowsOfStitches: 5, numberOfStitches: .constant(10), totalNumberOfStitches: .constant(12), rowCountPicker: .constant(4), numberOfRows: .constant(5))
 }
