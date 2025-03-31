@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-
+////
 struct CustomCounterComponentView: View {
 	@Environment(\.modelContext) private var modelContext
 	@Bindable var counter: Counter
