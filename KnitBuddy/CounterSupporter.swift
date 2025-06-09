@@ -1,5 +1,5 @@
 //
-//  CounterSuppView.swift
+//  CounterSupporter.swift
 //  KnitBuddy
 //
 //  Created by Thomas Lahr on 21/12/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CounterSuppView: View {
+struct CounterSupporter: View {
 	@Binding var numberOfStitches: Int
 	@Binding var totalNumberOfRows: Int
 	@Binding var countBy: Int
@@ -100,5 +100,5 @@ struct CounterSuppView: View {
 }
 
 #Preview {
-	CounterSuppView(numberOfStitches: .constant(2), totalNumberOfRows: .constant(2), countBy: .constant(1), totalNumberOfStitches: .constant(10))
+	CounterSupporter(numberOfStitches: .constant(2), totalNumberOfRows: .constant(2), countBy: .constant(1), totalNumberOfStitches: .constant(10))
 }

@@ -1,5 +1,5 @@
 //
-//  CounterView.swift
+//  MainCounter.swift
 //  KnitBuddy
 //
 //  Created by Thomas Lahr on 21/12/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CounterView: View {
+struct MainCounter: View {
 	@Binding var numberOfStitches: Int
 	@Binding var countByPicker: Int
 	@Binding var totalRowCount: Int
@@ -58,5 +58,5 @@ struct CounterView: View {
 }
 
 #Preview {
-	CounterView(numberOfStitches: .constant(2), countByPicker: .constant(1), totalRowCount: .constant(2), rowCountPicker: .constant(2), useAutomaticCounter: false, rowsOfRows: 4)
+	MainCounter(numberOfStitches: .constant(2), countByPicker: .constant(1), totalRowCount: .constant(2), rowCountPicker: .constant(2), useAutomaticCounter: false, rowsOfRows: 4)
 }

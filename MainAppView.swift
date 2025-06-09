@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MainView: View {
+struct MainAppView: View {
 	
 	@State private var selectedTab: Tabs = .simpleCounter
 	@StateObject private var keyboardObserver = KeyboardObserver()
@@ -34,7 +34,7 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    MainAppView()
 }
 
 import SwiftUI

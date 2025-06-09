@@ -20,19 +20,11 @@ struct AutomaticRowCounter: View {
 	@State private var resetCounter = false
 	
 	var body: some View {
-		VStack {
 		//	Text("\(numberOfStitches)")
 			HStack {
 				HStack {
-					Text("AUTOMATIC")
-						.foregroundStyle(.peachBeige)
-						.fontDesign(.rounded)
-						.font(.system(size: 10))
-						.fontWeight(.bold)
-						.fixedSize()
-						.frame(width: 20, height: 80)
-						.rotationEffect(.degrees(270))
-						.padding(.leading, -15)
+					RotatedText(title: "Automatic")
+					
 					Button {
 						resetCounter.toggle()
 					} label: {
@@ -105,7 +97,6 @@ struct AutomaticRowCounter: View {
 					
 				}
 			}
-		}
 
 	}
 	

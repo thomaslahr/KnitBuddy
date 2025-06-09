@@ -1,5 +1,5 @@
 //
-//  CustomCounterView.swift
+//  SelectedProjectView.swift
 //  KnitBuddy
 //
 //  Created by Thomas Lahr on 28/03/2025.
@@ -8,10 +8,12 @@
 import SwiftData
 import SwiftUI
 
-struct CustomCounterView: View {
+struct SelectedProjectView: View {
 	@Query var counters: [Counter]
 	
 	@State private var isAddingCounter = false
+	
+	let project: Project?
 	
     var body: some View {
 		let firstCounterColor = counters.first?.color ?? .flameOrange
@@ -48,7 +50,7 @@ struct CustomCounterView: View {
 								removal: .opacity))
 						
 						if index < counters.count - 1 {
-							DividerView(color: counter.color)
+							CustomDivider(color: counter.color)
 						}
 					}
 					.padding(.horizontal)
@@ -70,7 +72,7 @@ struct CustomCounterView: View {
 }
 
 #Preview {
-	CustomCounterView()
+	SelectedProjectView(id: UUID())
 		.modelContainer(for: Counter.self, inMemory: true)
 }
 

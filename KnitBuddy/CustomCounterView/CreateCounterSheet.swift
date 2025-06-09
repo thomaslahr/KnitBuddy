@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-struct CustomCounterSheetView: View {
+struct CreateCounterSheet: View {
 	let comesFromSimpleCounter: Bool
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.modelContext) private var modelContext
@@ -104,5 +104,5 @@ struct CustomCounterSheetView: View {
 }
 
 #Preview {
-	CustomCounterSheetView(comesFromSimpleCounter: true, numberOfRows: 45)
+	CreateCounterSheet(comesFromSimpleCounter: true, numberOfRows: 45)
 }
