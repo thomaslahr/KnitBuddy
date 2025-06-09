@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class CounterNotes {
+class ProjectNotes {
 	var details: String
 	var notes: String
 	var yarn: String

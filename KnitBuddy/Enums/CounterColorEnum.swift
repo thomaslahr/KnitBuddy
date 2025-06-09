@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum CounterColorEnum: String, CaseIterable {
+enum CounterColorEnum: String, CaseIterable, ShapeStyle {
 	
 	case flameOrange = "flameOrange"
 	case jungleTeal = "jungleTeal"

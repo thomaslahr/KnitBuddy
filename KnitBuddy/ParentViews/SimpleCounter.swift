@@ -20,49 +20,49 @@ struct SimpleCounter: View {
 		VStack {
 			TitleView(title: "KnitBuddy", size: 28.0, colorStyle: .flameOrange)
 				.frame(maxWidth: .infinity)
-				.overlay(alignment: .trailing) {
-					
-					Button {
-						isAddingCounter.toggle()
-					} label: {
-						//						VStack {
-						//							Text("Add number")
-						//							Text("of stiches")
-						//						}
-						//						.foregroundStyle(GradientColors.primaryAppColor)
-						//						.fontWeight(.bold)
-						//							.font(.system(size: 10))
-						//							.padding(7)
-						//							.background {
-						//								RoundedRectangle(cornerRadius: 12)
-						//									.stroke(GradientColors.primaryAppColor, lineWidth: 2)
-						//							}
-						//
-						//					}
-						//					.padding(.leading, 20)
-						Image(systemName: "plus.circle")
-							.font(.system(size: 40))
-							.fontWeight(.light)
-							.foregroundStyle(GradientColors.primaryAppColor)
-							.padding(.trailing, 20)
-					}
-				}
-				.overlay(alignment: .leading) {
-					Button {
-						showSettings.toggle()
-					} label: {
-						Image(systemName: "gear")
-							.font(.system(size: 40))
-							.fontWeight(.light)
-							.foregroundStyle(GradientColors.primaryAppColor)
-							.padding(.leading, 20)
-					}
-				}
+//				.overlay(alignment: .trailing) {
+//					
+//					Button {
+//						isAddingCounter.toggle()
+//					} label: {
+//						//						VStack {
+//						//							Text("Add number")
+//						//							Text("of stiches")
+//						//						}
+//						//						.foregroundStyle(GradientColors.primaryAppColor)
+//						//						.fontWeight(.bold)
+//						//							.font(.system(size: 10))
+//						//							.padding(7)
+//						//							.background {
+//						//								RoundedRectangle(cornerRadius: 12)
+//						//									.stroke(GradientColors.primaryAppColor, lineWidth: 2)
+//						//							}
+//						//
+//						//					}
+//						//					.padding(.leading, 20)
+//						Image(systemName: "plus.circle")
+//							.font(.system(size: 40))
+//							.fontWeight(.light)
+//							.foregroundStyle(GradientColors.primaryAppColor)
+//							.padding(.trailing, 20)
+//					}
+//				}
+//				.overlay(alignment: .leading) {
+//					Button {
+//						showSettings.toggle()
+//					} label: {
+//						Image(systemName: "gear")
+//							.font(.system(size: 40))
+//							.fontWeight(.light)
+//							.foregroundStyle(GradientColors.primaryAppColor)
+//							.padding(.leading, 20)
+//					}
+//				}
 			ScrollView {
 				VStack(spacing: 5) {
 					VStack(spacing: 5) {
 //						Text("Total number of stitches: \(mainViewModel.totalNumberOfStitchesAutomatic)")
-						CounterView(
+						MainCounter(
 							numberOfStitches: $mainViewModel.numberOfStitchesManual,
 							countByPicker: $mainViewModel.countByPicker,
 							totalRowCount: $mainViewModel.totalNumberOfStitchesAutomatic,
@@ -71,21 +71,21 @@ struct SimpleCounter: View {
 							rowsOfRows: mainViewModel.rowsOfStiches
 						)
 						
-						CounterSuppView(
+						CounterSupporter(
 							numberOfStitches: $mainViewModel.numberOfStitchesManual,
 							totalNumberOfRows: $mainViewModel.totalNumberOfStitchesAutomatic,
 							countBy: $mainViewModel.countByPicker, totalNumberOfStitches: $mainViewModel.totalNumberOfStitchesAutomatic
 						)
 					}
 					
-					DividerView(color: .flameOrange)
+					CustomDivider(color: .flameOrange)
 					
 					VStack {
 						ToggleView(incomingBool: $mainViewModel.useAutomaticCounter, trueString: "Switch to Manual Row Counter", falseString: "Switch to Automatic Row Counter")
 						
 						
 						if !mainViewModel.useAutomaticCounter {
-							ManualRowCounter(rowsOfRowsManual: $mainViewModel.rowsOfStitchesManual, numberOfRows: $mainViewModel.numberOfStitchesManual, title: "Manual")
+							ManualRowCounter(rowsOfStitchesManual: $mainViewModel.rowsOfStitchesManual, numberOfRows: $mainViewModel.numberOfStitchesManual)
 								.frame(maxHeight: 100)
 							//.onAppear(perform: resetCounters)
 						} else {
@@ -96,37 +96,38 @@ struct SimpleCounter: View {
 							//.onAppear(perform: resetCounters)
 						}
 					}
-					DividerView(color: .flameOrange)
+//					DividerView(color: .flameOrange)
 					
-					VStack(spacing: 0) {
-						ToggleView(incomingBool: $mainViewModel.showExtraButton, trueString: "Show Yarn Notes", falseString: "Show Extra Button")
-						if mainViewModel.showExtraButton {
-							
-							ExtraButtonView(
-								numberOfRows: $mainViewModel.numberOfStitchesManual,
-								totalNumberOfRows: $mainViewModel.totalNumberOfStitchesAutomatic,
-								useAutomaticCounter: mainViewModel.useAutomaticCounter,
-								countByPicker: mainViewModel.countByPicker,
-								rowCountPicker: mainViewModel.rowCountPicker
-							)
-							.padding(.vertical)
-						} else {
-							if let yarnDetail = yarnDetails.first {
-								if !mainViewModel.showExtraButton {
-									TextEditorView(
-										yarnDetails: Binding(
-											get: { yarnDetail.text },
-											set: { yarnDetail.text = $0 }
-										),
-										viewTitle: "Notes",
-										viewHeight: 250)
-									.transition(.opacity)
-								}
-							}
-						}
-					}
-					.animation(.easeInOut(duration: 0.2), value: mainViewModel.showExtraButton)
+//					VStack(spacing: 0) {
+//						ToggleView(incomingBool: $mainViewModel.showExtraButton, trueString: "Show Yarn Notes", falseString: "Show Extra Button")
+//						if mainViewModel.showExtraButton {
+//							
+//							ExtraButtonView(
+//								numberOfRows: $mainViewModel.numberOfStitchesManual,
+//								totalNumberOfRows: $mainViewModel.totalNumberOfStitchesAutomatic,
+//								useAutomaticCounter: mainViewModel.useAutomaticCounter,
+//								countByPicker: mainViewModel.countByPicker,
+//								rowCountPicker: mainViewModel.rowCountPicker
+//							)
+//							.padding(.vertical)
+//						} else {
+//							if let yarnDetail = yarnDetails.first {
+//								if !mainViewModel.showExtraButton {
+//									TextEditorView(
+//										yarnDetails: Binding(
+//											get: { yarnDetail.text },
+//											set: { yarnDetail.text = $0 }
+//										),
+//										viewTitle: "Notes",
+//										viewHeight: 250)
+//									.transition(.opacity)
+//								}
+//							}
+//						}
+//					}
+//					.animation(.easeInOut(duration: 0.2), value: mainViewModel.showExtraButton)
 				}
+				.frame(maxHeight: .infinity)
 				.padding()
 			}
 			//.scrollDisabled(!showTextEditor)
@@ -166,10 +167,10 @@ struct SimpleCounter: View {
 			}
 		}
 		.background(.peachBeige)
-		.sheet(isPresented: $isAddingCounter) {
-			CustomCounterSheetView(comesFromSimpleCounter: true, numberOfRows: mainViewModel.numberOfStitchesManual)
-				.presentationDetents([.medium])
-		}
+//		.sheet(isPresented: $isAddingCounter) {
+//			CreateCounterSheet(comesFromSimpleCounter: true, numberOfRows: mainViewModel.numberOfStitchesManual)
+//				.presentationDetents([.medium])
+//		}
 	}
 	private func createInitialYarnNotes() {
 		guard !isPreviewMode else { return }

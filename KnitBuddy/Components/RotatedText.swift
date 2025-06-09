@@ -8,11 +8,21 @@
 import SwiftUI
 
 struct RotatedText: View {
+	let title: String
+	
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+		Text(title.uppercased())
+			.foregroundStyle(.peachBeige)
+			.fontDesign(.rounded)
+			.font(.system(size: 10))
+			.fontWeight(.bold)
+			.fixedSize()
+			.frame(width: 20, height: 80)
+			.rotationEffect(.degrees(270))
+			.padding(.leading, -15)
     }
 }
 
 #Preview {
-    RotatedText()
+	RotatedText(title: "Manual")
 }

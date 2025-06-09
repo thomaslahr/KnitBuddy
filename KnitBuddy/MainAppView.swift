@@ -1,5 +1,5 @@
 //
-//  MainView.swift
+//  MainAppView.swift
 //  KnitBuddy
 //
 //  Created by Thomas Lahr on 28/03/2025.
@@ -9,17 +9,17 @@ import SwiftUI
 
 struct MainAppView: View {
 	
-	@State private var selectedTab: Tabs = .simpleCounter
+	@State private var selectedTab: Tabs = .simpleCounterView
 	@StateObject private var keyboardObserver = KeyboardObserver()
 	
     var body: some View {
 		NavigationStack {
 			VStack {
 				switch selectedTab {
-				case .simpleCounter:
+				case .simpleCounterView:
 					SimpleCounter()
-				case .customCounter:
-					CustomCounterView()
+				case .projectView:
+					ProjectListView()
 				}
 			}
 			.overlay(alignment: .bottom) {

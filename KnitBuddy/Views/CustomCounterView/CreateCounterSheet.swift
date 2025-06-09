@@ -94,6 +94,8 @@ struct CreateCounterSheet: View {
 						.stroke(lineWidth: 3)
 						.frame(maxWidth: 160, maxHeight: 60)
 					Text("Create Counter")
+						.fontWeight(.black)
+						.fontDesign(.rounded)
 				}
 				.foregroundStyle(counterName.isEmpty ? .lightBlack.opacity(0.3) : .flameOrange)
 			}

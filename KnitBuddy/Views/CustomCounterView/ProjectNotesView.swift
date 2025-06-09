@@ -45,16 +45,19 @@ struct ProjectNotesView: View {
 						.font(.system(size: 40))
 						.fontWeight(.light)
 						.foregroundStyle(project.color)
-						.padding(.leading, 20)
 				}
+				.padding(.leading, 10)
 			}
 			ScrollView {
 				SmallTitleView(title: "Date created: \(project.dateCreated.formatted(date: .numeric, time: .shortened))", size: 15.0, color: project.color)
 				VStack{
+					NotesEditorView(projectNotes: $project.notes.yarn, viewTitle: "Yarn", minHeight: 100, maxHeight: 200, colorStyle: project.color, hideTitle: false)
+					NotesEditorView(projectNotes: $project.notes.details, viewTitle: "Details", minHeight: 100, maxHeight: 200, colorStyle: project.color, hideTitle: false)
 					NotesEditorView(projectNotes: $project.notes.notes, viewTitle: "Notes", minHeight: 200, maxHeight: 300, colorStyle: project.color, hideTitle: false)
-					NotesEditorView(projectNotes: $project.notes.details, viewTitle: "Details", minHeight: 200, maxHeight: 200, colorStyle: project.color, hideTitle: false)
-					NotesEditorView(projectNotes: $project.notes.yarn, viewTitle: "Yarn", minHeight: 200, maxHeight: 200, colorStyle: project.color, hideTitle: false)
+					
+					
 				}
+				.padding(.horizontal)
 			}
 		}
 		.onChange(of: editTitle, {

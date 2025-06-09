@@ -10,7 +10,7 @@ import SwiftData
 
 struct NotesEditorView<T: ShapeStyle>: View {
 	
-	@Binding var counterNotes: String
+	@Binding var projectNotes: String
 	@Environment(\.modelContext) private var modelContext
 	@FocusState var isInputActive: Bool
 	@State private var debounceTimer: Timer?
@@ -22,17 +22,20 @@ struct NotesEditorView<T: ShapeStyle>: View {
 	
 	@Query var counters: [Counter]
 	
+	let hideTitle: Bool
+	
 	var body: some View {
 		VStack{
-			Text(viewTitle)
-				.fontWeight(.semibold)
-				.frame(maxWidth: .infinity, alignment: .leading)
-				.foregroundStyle(colorStyle)
-			TextEditor(text: $counterNotes)
+			if !hideTitle {
+				Text(viewTitle)
+					.fontWeight(.semibold)
+					.frame(maxWidth: .infinity, alignment: .leading)
+					.foregroundStyle(colorStyle)
+			}
+			TextEditor(text: $projectNotes)
 				.foregroundStyle(.black)
 				.lineSpacing(5)
 				.cornerRadius(10)
-				.padding(5)
 				.scrollContentBackground(.hidden)
 				//.background(Color(.systemGray6))
 				.background(.peachBeige)
@@ -44,12 +47,11 @@ struct NotesEditorView<T: ShapeStyle>: View {
 				.frame(minHeight: minHeight)
 				.frame(maxHeight: maxHeight)
 				.focused($isInputActive)
-				.onChange(of: counterNotes) { oldValue, newValue in
+				.onChange(of: projectNotes) { oldValue, newValue in
 					debounceSave(newValue)
 				}
 			
 		}
-		.padding()
 		.background {
 			RoundedRectangle(cornerRadius: 8)
 				//.fill(Color(.systemGray6))
@@ -79,5 +81,5 @@ struct NotesEditorView<T: ShapeStyle>: View {
 }
 
 #Preview {
-	NotesEditorView(counterNotes: .constant("This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn."), viewTitle: "Notes", minHeight: 250, maxHeight: 400, colorStyle: .flameOrange)
+	NotesEditorView(projectNotes: .constant("This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn."), viewTitle: "Notes", minHeight: 250, maxHeight: 400, colorStyle: .flameOrange, hideTitle: false)
 }

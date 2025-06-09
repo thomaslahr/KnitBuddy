@@ -1,5 +1,5 @@
 //
-//  DividerView.swift
+//  CustomDivider.swift
 //  KnitBuddy
 //
 //  Created by Thomas Lahr on 27/03/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DividerView: View {
+struct CustomDivider: View {
 	
 	let color: Color
 	
@@ -20,5 +20,5 @@ struct DividerView: View {
 }
 
 #Preview {
-	DividerView(color: .flameOrange)
+	CustomDivider(color: .flameOrange)
 }

@@ -8,50 +8,48 @@
 import SwiftUI
 
 struct ManualRowCounter: View {
-	@Binding var rowsOfRowsManual: Int
+	@Binding var rowsOfStitchesManual: Int
 	@Binding var numberOfRows: Int
-	let title: String
 	
 	var body: some View {
 		//SmallTitleView(title: "Rows of Stitches", size: 15)
 		HStack {
 			HStack {
-				Text(title.uppercased())
-					.foregroundStyle(.peachBeige)
-					.fontDesign(.rounded)
-					.font(.system(size: 10))
-					.fontWeight(.bold)
-					.fixedSize()
-					.frame(width: 20, height: 80)
-					.rotationEffect(.degrees(270))
-					.padding(.leading, -15)
-				Group {
+				RotatedText(title: "Manual")
+				
+				
+				//Reset and minus button
+				HStack {
 					Button {
-						rowsOfRowsManual = 0
+						rowsOfStitchesManual = 0
 					} label: {
 						Image(systemName: "arrow.counterclockwise")
 					}
 					
 					Button {
-						if rowsOfRowsManual > 0 {
-							rowsOfRowsManual -= 1
+						if rowsOfStitchesManual > 0 {
+							rowsOfStitchesManual -= 1
 						}
 					} label: {
 						Image(systemName: "minus.circle")
 					}
-					.padding(.horizontal, 20)
 				}
 				.font(.system(size: 40))
 				.fontWeight(.bold)
 				
 				Spacer()
 				
-				Text("\((rowsOfRowsManual))")
-					.font(.system(size: 55))
+				Text("\((rowsOfStitchesManual))")
+					.font(rowsOfStitchesManual > 99 ? .system(size: 40) : .system(size: 55))
+					.frame(width: 80)
 					.fontWeight(.semibold)
 					.foregroundStyle(.white)
+					.border(.black, width: 2)
+				
+				
+				
 			}
-			.frame(maxHeight: 100)
+			.frame(maxWidth: .infinity, maxHeight: 100)
 			.padding(.horizontal, 20)
 			.foregroundStyle(.peachBeige)
 			.background {
@@ -61,13 +59,15 @@ struct ManualRowCounter: View {
 			}
 			HStack {
 				Button {
-					rowsOfRowsManual += 1
-					numberOfRows = 0
+					if rowsOfStitchesManual < 999 {
+						rowsOfStitchesManual += 1
+						numberOfRows = 0
+					}
 				} label: {
 					Image(systemName: "plus.circle")
 						.font(.system(size: 90))
 						.fontWeight(.semibold)
-						//.foregroundStyle(GradientColors.primaryAppColor)
+					//.foregroundStyle(GradientColors.primaryAppColor)
 						.foregroundStyle(.flameOrange)
 				}
 			}
@@ -77,5 +77,5 @@ struct ManualRowCounter: View {
 
 #Preview {
 	
-	ManualRowCounter(rowsOfRowsManual: .constant(1), numberOfRows: .constant(1), title: "Manual")
+	ManualRowCounter(rowsOfStitchesManual: .constant(1), numberOfRows: .constant(1))
 }

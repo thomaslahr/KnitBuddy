@@ -14,14 +14,14 @@ class Counter {
 	var rows: Int
 	var counterColor: String
 	var isLocked = false
-	var notes: CounterNotes
+	
+	var notes = ""
 	var dateCreated: Date
 	
 	init(name: String, counterColor: String = "flameOrange", rows: Int = 0, dateCreated: Date = .now) {
 		self.name = name
 		self.counterColor = counterColor
 		self.rows = rows
-		self.notes = CounterNotes(details: "", notes: "", yarn: "")
 		self.dateCreated = dateCreated
 	}
 }
