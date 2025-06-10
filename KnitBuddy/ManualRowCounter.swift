@@ -44,7 +44,6 @@ struct ManualRowCounter: View {
 					.frame(width: 80)
 					.fontWeight(.semibold)
 					.foregroundStyle(.white)
-					.border(.black, width: 2)
 				
 				
 				

@@ -10,7 +10,6 @@ import SwiftData
 
 struct SimpleCounter: View {
 	@Environment(\.modelContext) private var modelContext
-	@Query var yarnDetails: [YarnNotes]
 	
 	@StateObject private var mainViewModel = MainViewModel()
 	@State private var isAddingCounter = false
@@ -133,10 +132,6 @@ struct SimpleCounter: View {
 			//.scrollDisabled(!showTextEditor)
 			.scrollIndicators(.hidden)
 			.onAppear {
-				if yarnDetails.isEmpty {
-					createInitialYarnNotes()
-				}
-				
 				if !isPreviewMode {
 					UIApplication.shared.isIdleTimerDisabled = true
 				}
@@ -172,18 +167,6 @@ struct SimpleCounter: View {
 //				.presentationDetents([.medium])
 //		}
 	}
-	private func createInitialYarnNotes() {
-		guard !isPreviewMode else { return }
-		let initialYarnDetail = YarnNotes(text: "")
-		modelContext.insert(initialYarnDetail)
-		
-		do {
-			try modelContext.save()
-			print("Initial Yarn Note created.")
-		} catch {
-			print("Failed to create initial Yarn Note: \(error)")
-		}
-	}
 	
 	private var isPreviewMode: Bool {
 		ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
@@ -198,5 +181,4 @@ struct SimpleCounter: View {
 
 #Preview {
 	SimpleCounter()
-		.modelContainer(for: YarnNotes.self, inMemory: true)
 }
