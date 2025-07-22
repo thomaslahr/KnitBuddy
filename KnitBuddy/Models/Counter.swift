@@ -28,7 +28,7 @@ class Counter {
 
 extension Counter {
 	var color: Color {
-		guard let counterColor = CounterColorEnum(rawValue: counterColor) else {
+		guard let counterColor = CustomColorEnum(rawValue: counterColor) else {
 			return .flameOrange
 		}
 		return counterColor.color

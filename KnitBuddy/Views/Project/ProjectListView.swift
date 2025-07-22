@@ -18,11 +18,12 @@ struct ProjectListView: View {
 	
 	@State private var showAlert = false
 	
+	
 	var body: some View {
 		NavigationStack {
 			TitleView(title: "Projects", size: 28.0, colorStyle: .flameOrange)
 				.frame(maxWidth: .infinity)
-				.overlay(alignment: .topTrailing) {
+				.overlay(alignment: .trailing) {
 					Button {
 						showCreateProjectSheet.toggle()
 					} label: {
@@ -31,11 +32,11 @@ struct ProjectListView: View {
 							.font(.system(size: 40))
 							.fontWeight(.light)
 					}
-					.padding(.trailing, 20)
 				}
+				.padding(.horizontal, 5)
 			ScrollView {
-				VStack(alignment: .leading) {
-					ForEach(projects, id: \.self) { project in
+				LazyVStack(alignment: .leading) {
+					ForEach(projects, id: \.persistentModelID) { project in
 						HStack {
 							Button {
 								selectedProjectID = project.persistentModelID
@@ -63,11 +64,17 @@ struct ProjectListView: View {
 									.foregroundStyle(project.color)
 							}
 						}
+						.shadow(color: .lightBlack.opacity(0.2), radius: 5)
+						.transition(.asymmetric(
+							insertion: .opacity,
+							removal: .move(edge: .top).combined(with: .opacity)
+						))
+						.id(project.persistentModelID)
 					}
 				}
-				.padding()
+				.animation(.easeInOut(duration: 0.3), value: projects)
+				.padding(.horizontal)
 				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-				.border(.black, width: 2)
 				.alert("Delete Project?", isPresented: $showAlert) {
 					Button("Cancel", role: .cancel, action: { })
 					Button("Delete", role: .destructive) {
@@ -93,12 +100,11 @@ struct ProjectListView: View {
 	}
 	
 	private func deleteProject(project: Project) {
-
-		Task {
-			try await Task.sleep(for: .seconds(0.5))
-			modelContext.delete(project)
-			try? modelContext.save()
-		}
+		
+			withAnimation {
+				modelContext.delete(project)
+				try? modelContext.save()
+			}
 	}
 }
 

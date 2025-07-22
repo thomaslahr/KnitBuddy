@@ -21,12 +21,13 @@ class Project {
 	
 	
 	var projectColor: String
+	
 	init(
 		name: String,
 		id: UUID = UUID(),
 		counters: [Counter],
 		dateCreated: Date,
-		notes: ProjectNotes = ProjectNotes(details: "", notes: "", yarn: ""),
+		notes: ProjectNotes = ProjectNotes(),
 		projectColor: String = "flameOrange"
 	) {
 		self.name = name
@@ -50,7 +51,7 @@ extension Project {
 
 extension Project {
 	var color: Color {
-		guard let projectColor = CounterColorEnum(rawValue: projectColor) else {
+		guard let projectColor = CustomColorEnum(rawValue: projectColor) else {
 			return .flameOrange
 		}
 		return projectColor.color

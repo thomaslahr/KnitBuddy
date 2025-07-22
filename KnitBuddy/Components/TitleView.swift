@@ -18,6 +18,7 @@ struct TitleView<T: ShapeStyle>: View {
 				.fontWeight(.black)
 				.fontDesign(.rounded)
 				.foregroundStyle(colorStyle)
+				
 				//.padding(5)
 			
 		}

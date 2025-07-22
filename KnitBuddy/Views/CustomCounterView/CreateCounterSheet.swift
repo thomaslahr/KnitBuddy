@@ -1,5 +1,5 @@
 //
-//  CustomCounterSheetView.swift
+//  CustomCounterSheet.swift
 //  KnitBuddy
 //
 //  Created by Thomas Lahr on 28/03/2025.
@@ -14,46 +14,71 @@ struct CreateCounterSheet: View {
 	@Environment(\.modelContext) private var modelContext
 	@FocusState var isInputActive: Bool
 	@State private var counterName = ""
-	@State private var selectedColor = CounterColorEnum.flameOrange.rawValue
+	@State private var selectedColor = CustomColorEnum.flameOrange.rawValue
 	let numberOfRows: Int
 	
 	
-	let colors = CounterColorEnum.allCases
+	let colors = CustomColorEnum.allCases
 	
 	let project: Project?
 	
     var body: some View {
 		VStack {
-			//Titleview
-			TitleView(title: comesFromSimpleCounter ? "Add Stitches to New Counter" : "Create a new counter", size: 24.0, colorStyle: .flameOrange)
-			TextField(text: $counterName) {
-				Text("Enter name of counter")
-					.foregroundStyle(.lightBlack)
-			}
-			.foregroundStyle(.black)
-			.padding()
-			.focused($isInputActive)
-			.background {
-				RoundedRectangle(cornerRadius: 12)
-					.fill(.white)
-					.shadow(radius: 2)
+			TitleView(title: comesFromSimpleCounter ? "Add Stitches to New Counter" : "Create a new counter", size: 24.0, colorStyle: colorFromRawValue(selectedColor))
+				.padding(.bottom, 20)
 				
-			}
-
-			.padding(.horizontal)
-			if comesFromSimpleCounter {
-				HStack(spacing: 5) {
-					TitleView(title: "Number of stitches:", size: 20.0, colorStyle: .flameOrange)
-					Text("\(numberOfRows)")
-							.font(.system(size: 35))
-							.foregroundStyle(.white)
-							.frame(maxWidth: 70, maxHeight: 45)
-							.background {
-								RoundedRectangle(cornerRadius: 12)
-									.fill(GradientColors.primaryAppColor)
-							}
+			
+				TextField(text: $counterName) {
+					Text("Enter name of counter")
+						.foregroundStyle(.lightBlack)
 				}
-			}
+				.foregroundStyle(.black)
+				.padding()
+				.focused($isInputActive)
+				.background {
+					ZStack {
+						RoundedRectangle(cornerRadius: 12)
+							.fill(.white)
+							.shadow(radius: 2)
+						
+						if counterName.count > 20 {
+							RoundedRectangle(cornerRadius: 12)
+								.stroke(lineWidth: 2)
+								.fill(.red)
+						}
+					}
+					
+				}
+				.overlay(alignment: .trailing) {
+					Text("\(counterName.count)/20")
+						.foregroundStyle(counterName.count > 20 ? .red : .black)
+						.padding(.trailing, 10)
+				}
+				.onChange(of: counterName) {
+					if counterName.count >= 25 {
+						counterName = String(counterName.prefix(25))
+					}
+				}
+				.padding(.horizontal)
+				
+				Text("The counter name is too long.")
+					.font(.system(size: 15))
+					.fontWeight(.bold)
+					.foregroundStyle(.red)
+					.opacity(counterName.count > 20 ? 1 : 0)
+				if comesFromSimpleCounter {
+					HStack(spacing: 5) {
+						TitleView(title: "Number of stitches:", size: 20.0, colorStyle: .flameOrange)
+						Text("\(numberOfRows)")
+								.font(.system(size: 35))
+								.foregroundStyle(.white)
+								.frame(maxWidth: 70, maxHeight: 45)
+								.background {
+									RoundedRectangle(cornerRadius: 12)
+										.fill(GradientColors.primaryAppColor)
+								}
+					}
+				}
 			VStack(spacing: 10) {
 				Text("Choose a Color")
 					.foregroundStyle(.lightBlack)
@@ -78,8 +103,8 @@ struct CreateCounterSheet: View {
 				}
 			}
 			.padding()
+			
 			Button {
-				
 				guard let project = project else { return }
 				let newCounter = Counter(name: counterName, counterColor: selectedColor, rows: comesFromSimpleCounter ? numberOfRows : 0)
 				
@@ -97,9 +122,9 @@ struct CreateCounterSheet: View {
 						.fontWeight(.black)
 						.fontDesign(.rounded)
 				}
-				.foregroundStyle(counterName.isEmpty ? .lightBlack.opacity(0.3) : .flameOrange)
+				.foregroundStyle(counterName.isEmpty || counterName.count > 20 ? .lightBlack.opacity(0.3) : colorFromRawValue(selectedColor))
 			}
-			.disabled(counterName.isEmpty)
+			.disabled(counterName.isEmpty || counterName.count > 20)
 			.padding()
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -108,6 +133,10 @@ struct CreateCounterSheet: View {
 			isInputActive = true
 		}
     }
+	
+	func colorFromRawValue(_ rawValue: String) -> Color {
+		CustomColorEnum(rawValue: rawValue)?.color ?? .flameOrange
+	}
 }
 
 #Preview {

@@ -14,24 +14,66 @@ struct CustomCounterComponentView: View {
 	
 	@State private var showCounterNotes = false
 	@State private var fadeInCounterNotes = false
+	//@State private var showingAlert = false
+	@State private var editCounterName = false
+	@State private var newCounterName = ""
 	
-	@State private var showingAlert = false
+	@FocusState var isInputActive: Bool
+	@FocusState var isEditingCounterName: Bool
+	
+	@State private var buttonSymbol: ButtonSymbol = .edit
+	
 	var body: some View {
 		VStack(spacing: 5) {
 			HStack {
-				Text(counter.name.uppercased())
-					.foregroundStyle(counter.color)
-					.fontWeight(.bold)
-				
 				Button {
-					showingAlert.toggle()
+					editCounterName.toggle()
+					
+					if editCounterName {
+						isEditingCounterName = true
+						newCounterName = counter.name
+						buttonSymbol = .save
+					} else {
+						buttonSymbol = .edit
+						if !newCounterName.isEmpty && newCounterName.count <= 20 {
+							counter.name = newCounterName
+							try? modelContext.save()
+						}
+					}
 				} label: {
-					Image(systemName: "trash.circle")
+					Image(systemName: buttonSymbol.currentSymbol)
 						.fontWeight(.light)
 						.foregroundStyle(counter.isLocked ? .gray : counter.color)
-						.padding(.trailing, 20)
 				}
 				.disabled(counter.isLocked)
+				
+				if editCounterName {
+					TextField(newCounterName, text: $newCounterName)
+						.fontWeight(.bold)
+						.font(.system(size: 14))
+						.focused($isEditingCounterName)
+						.foregroundStyle(counter.color)
+						.onChange(of: newCounterName) {
+							if newCounterName.count > 25 {
+								newCounterName = String(newCounterName.prefix(25))
+							}
+						}
+				} else {
+					Text(counter.name)
+						.fontWeight(.bold)
+						.font(.system(size: 14))
+						.foregroundStyle(counter.color)
+				}
+				Spacer()
+//				Button {
+//					showingAlert.toggle()
+//				} label: {
+//					Image(systemName: "trash.circle")
+//						.fontWeight(.light)
+//						.foregroundStyle(counter.isLocked ? .gray : counter.color)
+//						.padding(.trailing, 20)
+//				}
+//				.disabled(counter.isLocked)
 			}
 			.frame(maxWidth: .infinity, alignment: .leading)
 			HStack(spacing: 0) {
@@ -61,7 +103,6 @@ struct CustomCounterComponentView: View {
 									}
 								}
 							}
-							
 						} label: {
 							Image(systemName: showCounterNotes ? "book.circle" : "book.closed.circle")
 								.frame(width: 40, height: 40)
@@ -104,7 +145,7 @@ struct CustomCounterComponentView: View {
 						.foregroundStyle(.white)
 				}
 				.frame(maxWidth: .infinity, maxHeight: 100)
-				.padding(.horizontal, 20)
+				.padding(.horizontal)
 				.foregroundStyle(counter.isLocked ? .lightBlack : .peachBeige)
 				.background {
 					RoundedRectangle(cornerRadius: 8)
@@ -130,19 +171,36 @@ struct CustomCounterComponentView: View {
 			.animation(.linear(duration: 0.15), value: counter.isLocked)
 			
 			if showCounterNotes {
-				NotesEditorView(projectNotes: $counter.notes, viewTitle: counter.name, minHeight: 50, maxHeight: 200, colorStyle: counter.color, hideTitle: true)
-					.transition(.move(edge: .top))
-					.animation(.easeInOut(duration: 0.3), value: showCounterNotes)
-					.opacity(fadeInCounterNotes ? 1 : 0)
+				NotesEditorView(
+					projectNotes: $counter.notes,
+					isInputActive: $isInputActive,
+					viewTitle: counter.name,
+					minHeight: 80,
+					maxHeight: 200,
+					colorStyle: GradientColors.custom(counter.color).gradient,
+					hideTitle: true,
+					maxNumberOfCharacters: 1000
+				)
+				.transition(.move(edge: .top))
+				.animation(.easeInOut(duration: 0.3), value: showCounterNotes)
+				.opacity(fadeInCounterNotes ? 1 : 0)
 			}
 		}
-		.alert("Delete Counter?", isPresented: $showingAlert) {
-			Button("Cancel", role: .cancel, action: { })
-			Button("Delete", role: .destructive) {
-					deleteCounter(counter: counter)
+		.padding(.top, 10)
+//		.alert("Delete Counter?", isPresented: $showingAlert) {
+//			Button("Cancel", role: .cancel, action: { })
+//			Button("Delete", role: .destructive) {
+//					deleteCounter(counter: counter)
+//			}
+//		} message: {
+//			Text("Are you sure? This cannot be undone.")
+//		}
+		.onChange(of: newCounterName) {
+			if newCounterName.count > 20 || newCounterName.isEmpty {
+				buttonSymbol = .tooLongOrTooShort
+			} else {
+				buttonSymbol = .save
 			}
-		} message: {
-			Text("Are you sure? This cannot be undone.")
 		}
 	}
 	

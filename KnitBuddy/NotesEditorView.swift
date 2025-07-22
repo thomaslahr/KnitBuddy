@@ -12,7 +12,7 @@ struct NotesEditorView<T: ShapeStyle>: View {
 	
 	@Binding var projectNotes: String
 	@Environment(\.modelContext) private var modelContext
-	@FocusState var isInputActive: Bool
+	@FocusState.Binding var isInputActive: Bool
 	@State private var debounceTimer: Timer?
 	
 	let viewTitle: String
@@ -23,6 +23,7 @@ struct NotesEditorView<T: ShapeStyle>: View {
 	@Query var counters: [Counter]
 	
 	let hideTitle: Bool
+	let maxNumberOfCharacters: Int
 	
 	var body: some View {
 		VStack{
@@ -39,6 +40,7 @@ struct NotesEditorView<T: ShapeStyle>: View {
 				.scrollContentBackground(.hidden)
 				//.background(Color(.systemGray6))
 				.background(.peachBeige)
+				.clipShape(RoundedRectangle(cornerRadius: 8))
 				.overlay {
 					RoundedRectangle(cornerRadius: 8)
 						.stroke(colorStyle, lineWidth: 2)
@@ -49,6 +51,11 @@ struct NotesEditorView<T: ShapeStyle>: View {
 				.focused($isInputActive)
 				.onChange(of: projectNotes) { oldValue, newValue in
 					debounceSave(newValue)
+				}
+				.onChange(of: projectNotes) {
+					if projectNotes.count > maxNumberOfCharacters {
+						projectNotes = String(projectNotes.prefix(maxNumberOfCharacters))
+					}
 				}
 			
 		}
@@ -81,5 +88,18 @@ struct NotesEditorView<T: ShapeStyle>: View {
 }
 
 #Preview {
-	NotesEditorView(projectNotes: .constant("This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn."), viewTitle: "Notes", minHeight: 250, maxHeight: 400, colorStyle: .flameOrange, hideTitle: false)
+	
+	@FocusState var isInputActive: Bool
+	NotesEditorView(
+		projectNotes: .constant(
+			"This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn. This is a very good yarn."
+		),
+		isInputActive: $isInputActive,
+		viewTitle: "Notes",
+		minHeight: 250,
+		maxHeight: 400,
+		colorStyle: .flameOrange,
+		hideTitle: false,
+		maxNumberOfCharacters: 200
+	)
 }
